@@ -41,9 +41,16 @@ public class Main {
     }
 
     private static void addVar(RoutingContext routingContext) {
-        api.addVar(routingContext.getBodyAsJson());
-        routingContext.response()
-                .setStatusCode(201)
-                .end(Json.encodePrettily(api.getAllVars()));
+        try {
+            api.addVar(routingContext.getBodyAsJson());
+            routingContext.response()
+                    .setStatusCode(201)
+                    .end(Json.encodePrettily(api.getAllVars()));
+        } catch (Exception e) {
+            routingContext.response()
+                    .putHeader("content-type", "application/json; charset=utf-8")
+                    .setStatusCode(404).end("{\"error\":\"Campos no deben ir vacios\"}");
+        }
+
     }
 }

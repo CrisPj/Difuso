@@ -24,10 +24,13 @@ public class API {
         allVars = new ArrayList<>();
     }
 
-    public void addVar(JsonObject bodyAsJson) {
+    public void addVar(JsonObject bodyAsJson) throws Exception {
         Variable var = new Variable();
         var.setId(contador++);
-        var.setNombre(bodyAsJson.getString("nombre"));
+        String nombre = bodyAsJson.getString("nombre");
+        if (nombre.isEmpty())
+            throw new Exception();
+        var.setNombre(nombre);
         var.setAlias(bodyAsJson.getString("alias"));
         allVars.add(var);
     }
