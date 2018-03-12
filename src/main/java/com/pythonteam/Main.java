@@ -3,11 +3,14 @@ package com.pythonteam;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 
 public class Main {
+    static API api;
     public static void main(String[] args) {
+        api = new API();
         Vertx vertx = Vertx.vertx();
         Router router = Router.router(vertx);
         router.route().handler(CorsHandler.create("*")
@@ -26,8 +29,21 @@ public class Main {
                 .end(Json.encodePrettily("Version:EAP"))
         );
 
+        router.route("/addVar").handler(Main::addVar);
+
+        router.route("/getVars").handler(routingContext -> routingContext.response()
+                .putHeader("content-type", "application/json; charset=utf-8")
+                .end(Json.encodePrettily(api.getAllVars())));
+
         vertx.createHttpServer()
                 .requestHandler(router::accept)
                 .listen(8080);
+    }
+
+    private static void addVar(RoutingContext routingContext) {
+        api.addVar(routingContext.getBodyAsJson());
+        routingContext.response()
+                .setStatusCode(201)
+                .end(Json.encodePrettily(api.getAllVars()));
     }
 }
