@@ -13,7 +13,6 @@ public class API {
     private ArchivoMaestro archivoMaestro;
     private ArchivoHechos archivoHechos;
     String nombreArchivo = Constantes.NOMBRE_ARCHIVOS;
-    private ArrayList<Variable> allVars;
     private int contador = 0;
 
     public API() {
@@ -21,10 +20,10 @@ public class API {
         archivoHechos = new ArchivoHechos(nombreArchivo, Constantes.LECTURA_ESCRITURA);
         // Se borran los hechos al inicio del programa:
         archivoHechos.borrarHechos();
-        allVars = new ArrayList<>();
     }
 
     public void addVar(JsonObject bodyAsJson) throws Exception {
+        
         Variable var = new Variable();
         var.setId(contador++);
         String nombre = bodyAsJson.getString("nombre");
@@ -32,10 +31,10 @@ public class API {
             throw new Exception();
         var.setNombre(nombre);
         var.setAlias(bodyAsJson.getString("alias"));
-        allVars.add(var);
+        archivoMaestro.nuevoRegistro(var);
     }
 
     public ArrayList getAllVars() {
-        return allVars;
+        return archivoMaestro.imprimirReglas();
     }
 }

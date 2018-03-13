@@ -2,10 +2,9 @@ package com.pythonteam.archivos;
 
 import com.pythonteam.arbol.Arbol;
 import com.pythonteam.arbol.Indice;
-import com.pythonteam.arbol.Regla;
+import com.pythonteam.arbol.Variable;
 import com.pythonteam.common.Constantes;
 
-import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +15,11 @@ public class ArchivoMaestro {
     private ArchivoIndice index;
     private Arbol Arbol;
     private String ruta;
-    private ArrayList<Regla> reglas;
+    private ArrayList<Variable> variables;
 
 
     public ArchivoMaestro(String nombre, String permisos) {
-        reglas = new ArrayList<>();
+        variables = new ArrayList<>();
         crearArchivo(nombre, permisos);
     }
 
@@ -42,69 +41,54 @@ public class ArchivoMaestro {
         try {
                 archivo.seek(0);
                 do {
-                    Regla regla = new Regla();
-                    String[] registros = new String[Regla.CANTIDAD_REGISTROS];
-                    char[] registroActual = new char[Regla.TAM_REGISTRO];
-                    regla.setLlave(archivo.readByte());
-                    for (int recordNumber = 0; recordNumber < Regla.CANTIDAD_REGISTROS; recordNumber++) {
-                        for (int i = 0; i < Regla.TAM_REGISTRO; i++) {
-                            registroActual[i] = archivo.readChar();
-                        }
-                        registros[recordNumber] = new String(registroActual).trim();
-                    }
-                    regla.setReglas(registros);
-
-                    for (int i = 0; i < Regla.TAM_REGISTRO; i++) {
+                    Variable variable = new Variable();
+                    String[] registros = new String[5];
+                    char[] registroActual = new char[Constantes.TAM_REGISTRO];
+                    variable.setId(archivo.readByte());
+                    for (int i = 0; i < Constantes.TAM_REGISTRO; i++) {
                         registroActual[i] = archivo.readChar();
                     }
-                    regla.setConsecuente(new String(registroActual).trim());
-                    reglas.add(regla);
+                    variable.setNombre(new String(registroActual).trim());
+                    for (int i = 0; i < Constantes.TAM_REGISTRO; i++) {
+                        registroActual[i] = archivo.readChar();
+                    }
+                    variable.setAlias(new String(registroActual).trim());
+                    variables.add(variable);
                 } while (true);
         } catch (Exception ex) {
-            System.out.println("Se han cargado las reglas: " + ex.getMessage());
+            System.out.println("Se han cargado las variables: " + ex.getMessage());
         }
     }
 
-    public void nuevoRegistro(Regla regla) {
-        reglas.add(regla);
+    public void nuevoRegistro(Variable var) {
+        variables.add(var);
         StringBuffer buffer;
         try {
             archivo.seek(archivo.length());
-            index.nuevo(regla.getLlave(), archivo.getFilePointer());
-            archivo.writeByte(regla.getLlave());
-            writeRule(regla);
-            buffer = new StringBuffer(regla.getConsecuente());
-            buffer.setLength(Regla.TAM_REGISTRO);
+            index.nuevo(var.getId(), archivo.getFilePointer());
+            archivo.writeByte(var.getId());
+            buffer = new StringBuffer(var.getNombre());
+            buffer.setLength(Constantes.TAM_REGISTRO);
+            archivo.writeChars(buffer.toString());
+            buffer = new StringBuffer(var.getAlias());
+            buffer.setLength(Constantes.TAM_REGISTRO);
             archivo.writeChars(buffer.toString());
         } catch (Exception ex) {
             System.out.println("Fallo al escribir en archivo maestro");
         }
     }
 
-    private void writeRule(Regla regla) throws IOException {
-        StringBuffer buffer;
-        for (int i = 0; i < Regla.CANTIDAD_REGISTROS; i++) {
-            try {
-                buffer = new StringBuffer(regla.getReglas()[i]);
-            } catch (Exception ex) {
-                buffer = new StringBuffer();
-            }
-            buffer.setLength(Regla.TAM_REGISTRO);
-            archivo.writeChars(buffer.toString());
-        }
-    }
-
-    public Regla obtenerRegla(Integer numeroRegla) {
+    public Variable obtenerRegla(Integer numeroRegla) {
         if (numeroRegla > 0)
-            for (Regla r : reglas) {
-                if (r.getLlave() == numeroRegla)
-                    return r;
+            for (Variable v : variables) {
+                if (v.getId() == numeroRegla)
+                    return v;
             }
         return null;
     }
 
-    public ArrayList<Regla> imprimirReglas() {
-        return reglas;
+    public ArrayList<Variable> imprimirReglas() {
+        return variables;
     }
 
     public List<Indice> mostrarIndex() {
@@ -116,8 +100,8 @@ public class ArchivoMaestro {
         Arbol.generarArbol();
     }
 
-    public boolean eliminarRegla(int llave) {
-        reglas.removeIf(r-> r.getLlave() == llave);
+    public boolean eliminarRegla(int id) {
+        variables.removeIf(r-> r.getId() == id);
         writeFile();
         return false;
     }
@@ -127,12 +111,15 @@ public class ArchivoMaestro {
         StringBuffer buffer;
         try {
             archivo.seek(0);
-            for (Regla regla : reglas) {
-                index.nuevo(regla.getLlave(), archivo.getFilePointer());
-                archivo.writeByte(regla.getLlave());
-                writeRule(regla);
-                buffer = new StringBuffer(regla.getConsecuente());
-                buffer.setLength(Regla.TAM_REGISTRO);
+            for (Variable v : variables) {
+                index.nuevo(v.getId(), archivo.getFilePointer());
+                archivo.writeByte(v.getId());
+                buffer = new StringBuffer(v.getNombre());
+                buffer.setLength(Constantes.TAM_REGISTRO);
+                archivo.writeChars(buffer.toString());
+
+                buffer = new StringBuffer(v.getAlias());
+                buffer.setLength(Constantes.TAM_REGISTRO);
                 archivo.writeChars(buffer.toString());
             }
         } catch (Exception ex) {
@@ -144,7 +131,7 @@ public class ArchivoMaestro {
     public boolean eliminarTodo()
     {
         eliminarReglas();
-        reglas.clear();
+        variables.clear();
         return true;
     }
 

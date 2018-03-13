@@ -1,6 +1,5 @@
 package com.pythonteam.archivos;
 
-import com.pythonteam.arbol.Regla;
 import com.pythonteam.common.Constantes;
 
 import java.io.IOException;
@@ -29,8 +28,8 @@ public class ArchivoHechos
             file.seek(0);
             do {
 
-                char[] hecho = new char[Regla.TAM_REGISTRO];
-                for (int i = 0; i < Regla.TAM_REGISTRO; i++)
+                char[] hecho = new char[Constantes.TAM_REGISTRO];
+                for (int i = 0; i < Constantes.TAM_REGISTRO; i++)
                     hecho[i] = file.readChar();
                 hechos.add(new String(hecho).trim());
             }while (true);
@@ -43,7 +42,7 @@ public class ArchivoHechos
         hechos.add(hecho);
         try {
             StringBuilder buffer = new StringBuilder(hecho);
-            buffer.setLength(Regla.TAM_REGISTRO);
+            buffer.setLength(Constantes.TAM_REGISTRO);
             file.writeChars(buffer.toString());
         } catch (Exception ex) {
             System.out.println("No se pudo insertar hecho");
@@ -67,7 +66,7 @@ public class ArchivoHechos
         borrarHechos();
         for (String hecho : hechos) {
             StringBuilder buffer = new StringBuilder(hecho);
-            buffer.setLength(Regla.TAM_REGISTRO);
+            buffer.setLength(Constantes.TAM_REGISTRO);
             try {
                 file.writeChars(buffer.toString());
             } catch (IOException e) {

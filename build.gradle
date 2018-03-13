@@ -4,7 +4,7 @@ compileJava.options.encoding = 'UTF-8'
 
 group 'difuso'
 version '1.0-SNAPSHOT'
-mainClassName = "com.pythontema.main"
+mainClassName = "com.pythonteam.Main"
 
 sourceCompatibility = 1.8
 
