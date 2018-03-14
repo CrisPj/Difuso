@@ -25,7 +25,11 @@ public class API {
     public void addVar(JsonObject bodyAsJson) throws Exception {
         
         Variable var = new Variable();
-        var.setId(contador++);
+        int size = archivoMaestro.imprimirReglas().size();
+        int id = 0;
+        if (size != 0)
+            id = archivoMaestro.imprimirReglas().get(size-1).getId()+1;
+        var.setId(id);
         String nombre = bodyAsJson.getString("nombre");
         if (nombre.isEmpty())
             throw new Exception();
