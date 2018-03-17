@@ -6,7 +6,7 @@ public class Funcion {
     private String nombre;
     private double puntoCritico[];
     private int translape;
-    private Punto[] puntos;
+    private ArrayList<Punto> puntos;
 
     public String getNombre() {
         return nombre;
@@ -32,7 +32,7 @@ public class Funcion {
         this.translape = translape;
     }
 
-    public Punto[] getPuntos() {
+    public ArrayList<Punto> getPuntos() {
         return puntos;
     }
 
