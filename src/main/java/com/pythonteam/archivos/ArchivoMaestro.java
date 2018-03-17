@@ -1,10 +1,12 @@
 package com.pythonteam.archivos;
 
 import com.pythonteam.arbol.Arbol;
+import com.pythonteam.arbol.Funcion;
 import com.pythonteam.arbol.Indice;
 import com.pythonteam.arbol.Variable;
 import com.pythonteam.common.Constantes;
 
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,6 @@ public class ArchivoMaestro {
                 archivo.seek(0);
                 do {
                     Variable variable = new Variable();
-                    String[] registros = new String[5];
                     char[] registroActual = new char[Constantes.TAM_REGISTRO];
                     variable.setId(archivo.readByte());
                     for (int i = 0; i < Constantes.TAM_REGISTRO; i++) {
@@ -53,6 +54,30 @@ public class ArchivoMaestro {
                         registroActual[i] = archivo.readChar();
                     }
                     variable.setAlias(new String(registroActual).trim());
+
+                    int tam = archivo.readInt();
+                    ArrayList<Funcion> func = new ArrayList<>();
+                    for (int i = 0; i < tam; i++) {
+                        Funcion f = new Funcion();
+                        char[] nombre = new char[Constantes.TAM_REGISTRO];
+                        for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
+                            nombre[i] = archivo.readChar();
+                        }
+                        f.setNombre(new String(nombre).trim());
+                        f.setTranslape(archivo.readInt());
+                        int size = archivo.readInt();
+
+                        double puntos[] = new double[size];
+                        for (int p = 0; p < size; p++) {
+                            puntos[p] = archivo.readDouble();
+                        }
+                        f.setPuntoCritico(puntos);
+
+                    }
+
+                    archivo.readChar();
+                    variable.setFunciones(func);
+
                     variables.add(variable);
                 } while (true);
         } catch (Exception ex) {
@@ -62,19 +87,42 @@ public class ArchivoMaestro {
 
     public void nuevoRegistro(Variable var) {
         variables.add(var);
-        StringBuffer buffer;
+
         try {
-            archivo.seek(archivo.length());
-            index.nuevo(var.getId(), archivo.getFilePointer());
-            archivo.writeByte(var.getId());
-            buffer = new StringBuffer(var.getNombre());
-            buffer.setLength(Constantes.TAM_REGISTRO);
-            archivo.writeChars(buffer.toString());
-            buffer = new StringBuffer(var.getAlias());
-            buffer.setLength(Constantes.TAM_REGISTRO);
-            archivo.writeChars(buffer.toString());
+            escribir(var);
         } catch (Exception ex) {
             System.out.println("Fallo al escribir en archivo maestro");
+        }
+    }
+
+    private void escribir(Variable var) throws IOException {
+        StringBuffer buffer;
+        archivo.seek(archivo.length());
+        index.nuevo(var.getId(), archivo.getFilePointer());
+        archivo.writeByte(var.getId());
+        buffer = new StringBuffer(var.getNombre());
+        buffer.setLength(Constantes.TAM_REGISTRO);
+        archivo.writeChars(buffer.toString());
+        buffer = new StringBuffer(var.getAlias());
+        buffer.setLength(Constantes.TAM_REGISTRO);
+        archivo.writeChars(buffer.toString());
+        int tam = var.getFunciones().size();
+        archivo.writeInt(tam);
+        if (tam > 0)
+        {
+            for (Funcion f:var.getFunciones())
+            {
+                buffer = new StringBuffer(f.getNombre());
+                buffer.setLength(Constantes.TAM_REGISTRO);
+                archivo.writeChars(buffer.toString());
+
+                archivo.writeInt(f.getTranslape());
+                archivo.writeInt(f.getPuntoCritico().length);
+                for (int i = 0; i < f.getPuntoCritico().length; i++) {
+                    archivo.writeDouble(f.getPuntoCritico()[i]);
+                }
+            }
+            archivo.writeChar('!');
         }
     }
 
@@ -112,15 +160,7 @@ public class ArchivoMaestro {
         try {
             archivo.seek(0);
             for (Variable v : variables) {
-                index.nuevo(v.getId(), archivo.getFilePointer());
-                archivo.writeByte(v.getId());
-                buffer = new StringBuffer(v.getNombre());
-                buffer.setLength(Constantes.TAM_REGISTRO);
-                archivo.writeChars(buffer.toString());
-
-                buffer = new StringBuffer(v.getAlias());
-                buffer.setLength(Constantes.TAM_REGISTRO);
-                archivo.writeChars(buffer.toString());
+               escribir(v);
             }
         } catch (Exception ex) {
             System.out.println("Fallo al escribir en archivo maestro");

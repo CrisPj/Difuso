@@ -1,9 +1,12 @@
 package com.pythonteam.arbol;
 
+import java.util.ArrayList;
+
 public class Variable {
     private int id;
     private String nombre;
     private String alias;
+    private ArrayList<Funcion> funciones;
 
     public String getNombre() {
         return nombre;
@@ -27,5 +30,13 @@ public class Variable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public ArrayList<Funcion> getFunciones() {
+        return funciones;
+    }
+
+    public void setFunciones(ArrayList<Funcion> funciones) {
+        this.funciones = funciones;
     }
 }

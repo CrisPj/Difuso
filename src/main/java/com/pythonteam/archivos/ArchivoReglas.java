@@ -6,16 +6,16 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
-public class ArchivoHechos
+public class ArchivoReglas
 {
 
     private RandomAccessFile file;
     private ArrayList<String> hechos;
 
-    public ArchivoHechos(String nombre, String permisos) {
+    public ArchivoReglas(String nombre, String permisos) {
         hechos = new ArrayList<>();
         try {
-            file = new RandomAccessFile(nombre + Constantes.EXTENCION_HECHOS, permisos);
+            file = new RandomAccessFile(nombre + Constantes.EXTENCION_REGLAS, permisos);
             if (file.length() > 0)
                 readFile();
         } catch (Exception ex) {
