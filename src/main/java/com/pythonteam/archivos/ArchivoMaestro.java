@@ -72,9 +72,9 @@ public class ArchivoMaestro {
                             puntos[p] = archivo.readDouble();
                         }
                         f.setPuntoCritico(puntos);
+                        func.add(f);
 
                     }
-
                     archivo.readChar();
                     variable.setFunciones(func);
 
