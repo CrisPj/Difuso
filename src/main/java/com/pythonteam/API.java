@@ -12,14 +12,12 @@ public class API {
 
     private ArchivoMaestro archivoMaestro;
     private ArchivoReglas archivoReglas;
-    String nombreArchivo = Constantes.NOMBRE_ARCHIVOS;
-    private int contador = 0;
 
     public API() {
-        archivoMaestro = new ArchivoMaestro(nombreArchivo, Constantes.LECTURA_ESCRITURA);
-        archivoReglas = new ArchivoReglas(nombreArchivo, Constantes.LECTURA_ESCRITURA);
+        archivoMaestro = new ArchivoMaestro(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
+        archivoReglas = new ArchivoReglas(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
         // Se borran los hechos al inicio del programa:
-        archivoReglas.borrarHechos();
+        archivoReglas.borrarReglas();
     }
 
     public void addVar(JsonObject bodyAsJson) throws Exception {

@@ -1,9 +1,5 @@
 package com.pythonteam;
 
-import com.pythonteam.arbol.Funcion;
-import com.pythonteam.arbol.Variable;
-import com.pythonteam.archivos.ArchivoMaestro;
-import com.pythonteam.common.Constantes;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
@@ -11,32 +7,9 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 
-import java.util.ArrayList;
-
 public class Main {
-
-
-
-
     static API api;
     public static void main(String[] args) {
-        Funcion f = new Funcion();
-        f.setNombre("malo");
-        f.setTranslape(20);
-        f.setPuntoCritico(new int[]{1});
-        ArrayList<Funcion> fs = new ArrayList<>();
-        fs.add(f);
-        Variable v = new Variable();
-
-        v.setNombre("asd");
-        v.setAlias("a");
-        v.setId(0);
-        v.setFunciones(fs);
-
-        ArchivoMaestro archivoMaestro = new ArchivoMaestro(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
-        archivoMaestro.eliminarTodo();
-        archivoMaestro.nuevoRegistro(v);
-        /*
         api = new API();
         Vertx vertx = Vertx.vertx();
         Router router = Router.router(vertx);
@@ -65,7 +38,6 @@ public class Main {
         vertx.createHttpServer()
                 .requestHandler(router::accept)
                 .listen(8080);
-                */
     }
 
     private static void addVar(RoutingContext routingContext) {

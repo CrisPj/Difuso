@@ -63,7 +63,7 @@ public class ArchivoReglas
 
     public void writeFile()
     {
-        borrarHechos();
+        borrarReglas();
         for (String hecho : hechos) {
             StringBuilder buffer = new StringBuilder(hecho);
             buffer.setLength(Constantes.TAM_REGISTRO);
@@ -80,7 +80,7 @@ public class ArchivoReglas
         hechos.removeIf(e -> e.equals(borrar));
     }
 
-    public void borrarHechos() {
+    public void borrarReglas() {
         hechos.clear();
         try {
             file.setLength(0);
