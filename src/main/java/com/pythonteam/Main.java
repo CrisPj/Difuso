@@ -33,7 +33,7 @@ public class Main {
 
         router.route("/getVars").handler(routingContext -> routingContext.response()
                 .putHeader("content-type", "application/json; charset=utf-8")
-                .end(Json.encodePrettily(api.getAllVars())));
+                .end(Json.encode(api.getAllVars())));
 
         vertx.createHttpServer()
                 .requestHandler(router::accept)
