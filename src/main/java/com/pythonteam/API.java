@@ -7,9 +7,11 @@ import com.pythonteam.archivos.ArchivoReglas;
 import com.pythonteam.archivos.ArchivoMaestro;
 import com.pythonteam.common.Constantes;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class API {
 
@@ -37,6 +39,12 @@ public class API {
             throw new Exception();
         var.setNombre(nombre);
         var.setAlias(bodyAsJson.getString("alias"));
+        JsonArray al = bodyAsJson.getJsonArray("funciones");
+        ArrayList<Funcion> funciones = new ArrayList<>();
+        for (int i = 0; i < al.size(); i++) {
+            funciones.add(al.getJsonObject(i).mapTo(Funcion.class));
+        }
+        var.setFunciones(funciones);
         archivoMaestro.nuevoRegistro(var);
     }
 
