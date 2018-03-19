@@ -68,12 +68,18 @@ public class Variable {
                 if (funciones.get(i).getPuntoCritico().length == 1) {
                     d = getD(i, puntos);
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
-                    puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0] + d, 0));
-                } else if (funciones.get(i).getPuntoCritico().length == 1) {
+                    double x = funciones.get(i).getPuntoCritico()[0] + d;
+                    if (x>100)
+                        x=100;
+                    puntos.add(new Punto(x, 0));
+                } else if (funciones.get(i).getPuntoCritico().length == 2) {
                     d = getD(i, puntos);
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1], 1));
-                    puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1] + d, 0));
+                    double x = funciones.get(i).getPuntoCritico()[1] + d;
+                    if (x > 100)
+                        x=100;
+                    puntos.add(new Punto(x, 0));
                 }
             }
             funciones.get(i).setPuntos(puntos);
