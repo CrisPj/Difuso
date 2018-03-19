@@ -3,7 +3,8 @@ package com.pythonteam.arbol;
 import com.pythonteam.archivos.ArchivoIndice;
 import com.pythonteam.common.Constantes;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Arbol
 {
@@ -35,16 +36,8 @@ public class Arbol
     public void generarArbol() {
         try {
             ArchivoIndice index = new ArchivoIndice(Constantes.NOMBRE_ARCHIVOS + Constantes.EXTENCION_INDICE, Constantes.LECTURA_ESCRITURA);
-            ArrayList<String> dirReglas = index.getDirRegistros();
-            byte contador = 0;
-            do {
-                String direccion = dirReglas.get(contador);
-                if (direccion != null) {
-                    Nodo nodo = new Nodo(Byte.parseByte(direccion.split("-")[0]), Long.parseLong(direccion.split("-")[1]));
-                    insertarNodo(nodo);
-                }
-                contador++;
-            } while (contador < dirReglas.size());
+            List<Indice> dirReglas = index.getDirRegistros();
+            dirReglas.stream().filter(Objects::nonNull).map(direccion -> new Nodo((byte) direccion.getLlave(), direccion.getDireccion())).forEachOrdered(this::insertarNodo);
         } catch (Exception ex) {
             System.out.println("Fallo al crear el arbolito\n"+ex.getMessage());
         }

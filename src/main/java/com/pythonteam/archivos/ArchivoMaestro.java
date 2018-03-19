@@ -16,7 +16,6 @@ public class ArchivoMaestro {
     private RandomAccessFile archivo;
     private ArchivoIndice index;
     private Arbol Arbol;
-    private String ruta;
     private ArrayList<Variable> variables;
 
 
@@ -28,7 +27,6 @@ public class ArchivoMaestro {
 
     public void crearArchivo(String nombre, String permisos) {
         try {
-            ruta = nombre;
             archivo = new RandomAccessFile(nombre + Constantes.EXTENCION_CONOCIMIENTO, permisos);
             index = new ArchivoIndice(nombre + Constantes.EXTENCION_INDICE, permisos);
             if (archivo.length() > 0) {
@@ -42,7 +40,8 @@ public class ArchivoMaestro {
     public void readFile() {
         try {
                 archivo.seek(0);
-                do {
+            for (int x = 0; x < archivo.length(); x++) {
+
                     Variable variable = new Variable();
                     char[] registroActual = new char[Constantes.TAM_REGISTRO];
                     variable.setId(archivo.readByte());
@@ -75,13 +74,12 @@ public class ArchivoMaestro {
                         func.add(f);
 
                     }
-                    archivo.readChar();
                     variable.setFunciones(func);
 
                     variables.add(variable);
-                } while (true);
+                }
         } catch (Exception ex) {
-            System.out.println("Se han cargado las variables: " + ex.getMessage());
+            System.out.println("No se pudo leer algo: " + ex.getMessage());
         }
     }
 
@@ -122,7 +120,6 @@ public class ArchivoMaestro {
                     archivo.writeDouble(f.getPuntoCritico()[i]);
                 }
             }
-            archivo.writeChar('!');
         }
     }
 
@@ -154,9 +151,19 @@ public class ArchivoMaestro {
         return false;
     }
 
+    public boolean editarRegla(Variable var)
+    {
+        Variable vr = variables.get(var.getId());
+        vr.setId(var.getId());
+        vr.setNombre(var.getNombre());
+        vr.setAlias(var.getAlias());
+        vr.setFunciones(var.getFunciones());
+        writeFile();
+        return true;
+    }
+
     private void writeFile() {
         eliminarReglas();
-        StringBuffer buffer;
         try {
             archivo.seek(0);
             for (Variable v : variables) {

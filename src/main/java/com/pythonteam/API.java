@@ -1,9 +1,12 @@
 package com.pythonteam;
 
+import com.pythonteam.arbol.Funcion;
+import com.pythonteam.arbol.InferenciaDifusa;
 import com.pythonteam.arbol.Variable;
 import com.pythonteam.archivos.ArchivoReglas;
 import com.pythonteam.archivos.ArchivoMaestro;
 import com.pythonteam.common.Constantes;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ public class API {
 
     public API() {
         archivoMaestro = new ArchivoMaestro(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
+        archivoMaestro.generarArbol();
         archivoReglas = new ArchivoReglas(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
         // Se borran los hechos al inicio del programa:
         archivoReglas.borrarReglas();
@@ -36,7 +40,19 @@ public class API {
         archivoMaestro.nuevoRegistro(var);
     }
 
+    public Funcion inferencia(JsonObject body)
+    {
+        ArrayList entradas = Json.decodeValue(body.getString("entradas"), ArrayList.class);
+        ArrayList<Variable> listaVariables = archivoMaestro.imprimirReglas();
+        InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
+        return inferencia.calcularSalida();
+    }
+
     public ArrayList getAllVars() {
         return archivoMaestro.imprimirReglas();
+    }
+
+    public void rmVar(JsonObject bodyAsJson) {
+        archivoMaestro.eliminarRegla(Integer.parseInt(bodyAsJson.getString("id")));
     }
 }

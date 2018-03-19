@@ -55,13 +55,8 @@ public class ArchivoIndice
      *
      * @return ArrayList<String>
      */
-    public ArrayList<String> getDirRegistros() {
-        ArrayList<String> reglas = new ArrayList<>();
-        for (Indice indice : indices)
-        {
-            reglas.add(indice.getLlave() + "-" + indice.getDireccion());
-        }
-        return reglas;
+    public List<Indice> getDirRegistros() {
+        return indices;
     }
 
     public List<Indice> mostrarIndice() {
@@ -70,10 +65,7 @@ public class ArchivoIndice
 
     public long buscar(int llave)
     {
-        for (Indice indice : indices)
-            if (indice.getLlave() == llave)
-                return indice.getDireccion();
-        return -1;
+        return indices.stream().filter(indice -> indice.getLlave() == llave).findFirst().map(Indice::getDireccion).orElse((long) -1);
     }
 
     private void readFile()

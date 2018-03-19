@@ -9,8 +9,6 @@ public class Funcion {
     private ArrayList<Punto> puntos;
     private double valorDifuso;
 
-
-
     public double calcMembresia(double x) {
         ArrayList<Punto> puntos = getPuntos();
         Punto a, b;

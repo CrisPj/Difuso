@@ -31,13 +31,29 @@ public class Main {
 
         router.route("/addVar").handler(Main::addVar);
 
+        router.route("/rmVar").handler(Main::rmVar);
+
         router.route("/getVars").handler(routingContext -> routingContext.response()
                 .putHeader("content-type", "application/json; charset=utf-8")
                 .end(Json.encode(api.getAllVars())));
 
+
         vertx.createHttpServer()
                 .requestHandler(router::accept)
                 .listen(8080);
+    }
+
+    private static void rmVar(RoutingContext routingContext) {
+        try {
+            api.rmVar(routingContext.getBodyAsJson());
+            routingContext.response()
+                    .setStatusCode(201)
+                    .end(Json.encodePrettily(api.getAllVars()));
+        } catch (Exception e) {
+            routingContext.response()
+                    .putHeader("content-type", "application/json; charset=utf-8")
+                    .setStatusCode(404).end("{\"error\":\"No se ha podido eliminar\"}");
+        }
     }
 
     private static void addVar(RoutingContext routingContext) {

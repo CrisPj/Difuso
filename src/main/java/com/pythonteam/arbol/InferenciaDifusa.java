@@ -1,7 +1,5 @@
 package com.pythonteam.arbol;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class InferenciaDifusa {
     /*
      * Este metodo es el que realiza el proceso de inferencia difusa
      */
-    public Funcion calcularSalida() throws FileNotFoundException, IOException {
+    public Funcion calcularSalida() {
         Double resultado = 0.0;
         Double membresia = 0.0;
 
@@ -354,8 +352,7 @@ public class InferenciaDifusa {
                 ArrayList<String> nomb = new ArrayList();
                 for (Funcion val : var.getFunciones())
                 {
-
-                    nomb.add(val.getNombre().substring(0, 2));
+                    nomb.add(val.getNombre());
                 }
                 vari.add(nomb);
             }
