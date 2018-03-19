@@ -60,7 +60,7 @@ public class ArchivoMaestro {
                         Funcion f = new Funcion();
                         char[] nombre = new char[Constantes.TAM_REGISTRO];
                         for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
-                            nombre[i] = archivo.readChar();
+                            nombre[j] = archivo.readChar();
                         }
                         f.setNombre(new String(nombre).trim());
                         f.setTranslape(archivo.readInt());

@@ -57,7 +57,6 @@ public class Variable {
                     puntos.add(new Punto(0, 0));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0] * 2, 0));
-                    funciones.get(i).setPuntos(puntos);
                 } else if (funciones.get(i).getPuntoCritico().length == 2) {
                     puntos.add(new Punto(0, 0));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
@@ -67,31 +66,32 @@ public class Variable {
             } else {
                 double d;
                 if (funciones.get(i).getPuntoCritico().length == 1) {
-                    d = getD(funciones, i);
-                    new Punto(funciones.get(i).getPuntoCritico()[0], 1);
-                    new Punto(funciones.get(i).getPuntoCritico()[0] + d, 0);
+                    d = getD(i, puntos);
+                    puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
+                    puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0] + d, 0));
                 } else if (funciones.get(i).getPuntoCritico().length == 1) {
-                    d = getD(funciones, i);
-                    new Punto(funciones.get(i).getPuntoCritico()[0], 1);
-                    new Punto(funciones.get(i).getPuntoCritico()[1], 1);
-                    new Punto(funciones.get(i).getPuntoCritico()[1] + d, 0);
+                    d = getD(i, puntos);
+                    puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
+                    puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1], 1));
+                    puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1] + d, 0));
                 }
             }
             funciones.get(i).setPuntos(puntos);
         }
     }
 
-    private double getD(ArrayList<Funcion> funciones, int i) {
+    private double getD(int i, ArrayList<Punto> puntos) {
         double d;
         if (funciones.get(i - 1).getPuntoCritico().length == 1) {
-            d = funciones.get(i - 1).getPuntoCritico()[0] - funciones.get(i).getPuntoCritico()[0] * funciones.get(i).getTranslape();
-            new Punto(funciones.get(i).getPuntoCritico()[0] - d, 0);
+            d = (funciones.get(i).getPuntoCritico()[0] - funciones.get(i - 1).getPuntoCritico()[0])/100 * funciones.get(i).getTranslape();
+            puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0] - d, 0));
         } else {
-            d = funciones.get(i - 1).getPuntoCritico()[1] - funciones.get(i).getPuntoCritico()[0] * funciones.get(i).getTranslape();
-            new Punto(d, 0);
+            d = (funciones.get(i).getPuntoCritico()[0] - funciones.get(i - 1).getPuntoCritico()[1])/100 * funciones.get(i).getTranslape();
+            puntos.add(new Punto(d, 0));
         }
         return d;
     }
+
 
     public boolean isSalida() {
         return salida;
