@@ -59,6 +59,7 @@ public class Variable {
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0] * 2, 0));
                 } else if (funciones.get(i).getPuntoCritico().length == 2) {
+
                     puntos.add(new Punto(0, 0));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1], 1));
@@ -88,14 +89,20 @@ public class Variable {
     }
 
     private double getD(int i, ArrayList<Punto> puntos) {
-        double d;
-        if (funciones.get(i - 1).getPuntoCritico().length == 1) {
-            d = (funciones.get(i).getPuntoCritico()[0] - funciones.get(i - 1).getPuntoCritico()[0])/100 * funciones.get(i).getTraslape();
-            puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0] - d, 0));
-        } else {
-            d = (funciones.get(i).getPuntoCritico()[0] - funciones.get(i - 1).getPuntoCritico()[1])/100 * funciones.get(i).getTraslape();
-            puntos.add(new Punto(d, 0));
-        }
+        double d = -1;
+            int size2 = funciones.get(i-1).getPuntos().size() ;
+
+            if (size2 == 3)
+            {
+                d=funciones.get(i-1).getPuntos().get(0).getX() - funciones.get(i-1).getPuntos().get(2).getX()/100 * funciones.get(i).getTraslape();
+                puntos.add(new Punto(funciones.get(i-1).getPuntos().get(2).getX() - d, 0));
+            }
+            else if (size2 == 4)
+            {
+                d=funciones.get(i-1).getPuntos().get(0).getX() - funciones.get(i-1).getPuntos().get(3).getX()/100 * funciones.get(i).getTraslape();
+                puntos.add(new Punto(funciones.get(i-1).getPuntos().get(3).getX() - d, 0));
+
+            }
         return d;
     }
 
