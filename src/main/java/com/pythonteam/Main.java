@@ -38,6 +38,8 @@ public class Main {
 
         router.route("/addVar").handler(Main::addVar);
 
+        router.route("/updateVar").handler(Main::updateVar);
+
         router.route("/rmVar").handler(Main::rmVar);
 
         router.route("/getVars").handler(routingContext -> routingContext.response()
@@ -48,6 +50,19 @@ public class Main {
         vertx.createHttpServer()
                 .requestHandler(router::accept)
                 .listen(8080);
+    }
+
+    private static void updateVar(RoutingContext routingContext) {
+        try {
+            api.updateVar(routingContext.getBodyAsJson());
+            routingContext.response()
+                    .setStatusCode(201)
+                    .end(Json.encodePrettily(api.getAllVars()));
+        } catch (Exception e) {
+            routingContext.response()
+                    .putHeader("content-type", "application/json; charset=utf-8")
+                    .setStatusCode(404).end("{\"error\":\"No se pudo actualizar\"}");
+        }
     }
 
     private static void rmVar(RoutingContext routingContext) {
