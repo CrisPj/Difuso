@@ -63,7 +63,13 @@ public class Variable {
                     puntos.add(new Punto(0, 0));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1], 1));
-                    double distancia = ((funciones.get(i).getPuntoCritico()[0] + funciones.get(i).getPuntoCritico()[1]) / 2) + funciones.get(i).getPuntoCritico()[1];
+                    double distancia;
+                    if (puntos.get(0).getX() == puntos.get(1).getX())
+                    {
+                        distancia = ((funciones.get(i).getPuntoCritico()[0] + funciones.get(i).getPuntoCritico()[1]) / 2) + funciones.get(i).getPuntoCritico()[1];
+                    }
+                    else
+                        distancia = funciones.get(i).getPuntoCritico()[1] + (puntos.get(1).getX() - puntos.get(0).getX());
                     if (distancia > 100)
                         distancia = 100;
                     puntos.add(new Punto(distancia, 0));
@@ -113,9 +119,6 @@ public class Variable {
     }
 
 
-    public boolean isSalida() {
-        return salida;
-    }
     public void calcularIntersecciones() {
 
         for(int i=0;i<funciones.size()-1;i++)
@@ -144,5 +147,13 @@ public class Variable {
 
     public ArrayList<Punto> getIntersecciones() {
         return intersecciones;
+    }
+
+    public boolean isSalida() {
+        return salida;
+    }
+
+    public void setSalida(boolean salida) {
+        this.salida = salida;
     }
 }
