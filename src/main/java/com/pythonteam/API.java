@@ -37,6 +37,7 @@ public class API {
             throw new Exception();
         var.setNombre(nombre);
         var.setAlias(bodyAsJson.getString("alias"));
+        var.setSalida(bodyAsJson.getBoolean("salida"));
         JsonArray al = bodyAsJson.getJsonArray("funciones");
         ArrayList<Funcion> funciones = new ArrayList<>();
         for (int i = 0; i < al.size(); i++) {
