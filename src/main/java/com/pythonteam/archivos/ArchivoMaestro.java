@@ -53,6 +53,7 @@ public class ArchivoMaestro {
                         registroActual[i] = archivo.readChar();
                     }
                     variable.setAlias(new String(registroActual).trim());
+                    variable.setSalida(archivo.readBoolean());
 
                     int tam = archivo.readInt();
                     ArrayList<Funcion> func = new ArrayList<>();
@@ -104,6 +105,7 @@ public class ArchivoMaestro {
         buffer = new StringBuffer(var.getAlias());
         buffer.setLength(Constantes.TAM_REGISTRO);
         archivo.writeChars(buffer.toString());
+        archivo.writeBoolean(var.isSalida());
         int tam = var.getFunciones().size();
         archivo.writeInt(tam);
         if (tam > 0)
