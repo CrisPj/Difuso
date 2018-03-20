@@ -151,6 +151,7 @@ public class ArchivoMaestro {
         Variable vr = variables.get(var.getId());
         vr.setId(var.getId());
         vr.setNombre(var.getNombre());
+        vr.setSalida(var.isSalida());
         vr.setAlias(var.getAlias());
         vr.setFunciones(var.getFunciones());
         writeFile();

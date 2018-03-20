@@ -50,10 +50,12 @@ public class API {
 
     public Funcion inferencia(JsonObject body)
     {
-        ArrayList entradas = Json.decodeValue(body.getString("entradas"), ArrayList.class);
+        JsonArray json = body.getJsonArray("");
+        System.exit(0);
         ArrayList<Variable> listaVariables = archivoMaestro.imprimirReglas();
-        InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
-        return inferencia.calcularSalida();
+        //InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
+       // return inferencia.calcularSalida();
+        return null;
     }
 
     public ArrayList getAllVars() {

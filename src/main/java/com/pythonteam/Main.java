@@ -31,6 +31,7 @@ public class Main {
         );
 
         router.route("/addVar").handler(Main::addVar);
+        router.route("/inference").handler(Main::inference);
 
         router.route("/updateVar").handler(Main::updateVar);
 
@@ -46,6 +47,19 @@ public class Main {
         vertx.createHttpServer()
                 .requestHandler(router::accept)
                 .listen(8080);
+    }
+
+    private static void inference(RoutingContext routingContext) {
+        try {
+            api.inferencia(routingContext.getBodyAsJson());
+            routingContext.response()
+                    .setStatusCode(201)
+                    .end(Json.encodePrettily(api.getAllVars()));
+        } catch (Exception e) {
+            routingContext.response()
+                    .putHeader("content-type", "application/json; charset=utf-8")
+                    .setStatusCode(404).end("{\"error\":\"No se pudo realizar la inferencia\"}");
+        }
     }
 
     private static void getVar(RoutingContext routingContext) {
