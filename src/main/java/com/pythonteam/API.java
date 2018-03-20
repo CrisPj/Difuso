@@ -61,7 +61,7 @@ public class API {
     }
 
     public void rmVar(JsonObject bodyAsJson) {
-        archivoMaestro.eliminarRegla(Integer.parseInt(bodyAsJson.getString("id")));
+        archivoMaestro.eliminarRegla(bodyAsJson.getInteger("id"));
     }
 
     public void updateVar(JsonObject bodyAsJson) {
