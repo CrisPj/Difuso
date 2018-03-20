@@ -124,12 +124,7 @@ public class ArchivoMaestro {
     }
 
     public Variable obtenerRegla(Integer numeroRegla) {
-        if (numeroRegla > 0)
-            for (Variable v : variables) {
-                if (v.getId() == numeroRegla)
-                    return v;
-            }
-        return null;
+        return variables.stream().filter(v -> v.getId() == numeroRegla).findFirst().orElse(null);
     }
 
     public ArrayList<Variable> imprimirReglas() {

@@ -67,4 +67,8 @@ public class API {
     public void updateVar(JsonObject bodyAsJson) {
         archivoMaestro.editarRegla(bodyAsJson.mapTo(Variable.class));
     }
+
+    public Variable getVar(int id) {
+        return archivoMaestro.obtenerRegla(id);
+    }
 }
