@@ -63,14 +63,17 @@ public class Variable {
                     puntos.add(new Punto(0, 0));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1], 1));
-                    puntos.add(new Punto(((funciones.get(i).getPuntoCritico()[0] + funciones.get(i).getPuntoCritico()[1]) / 2) + funciones.get(i).getPuntoCritico()[1], 1));
+                    double distancia = ((funciones.get(i).getPuntoCritico()[0] + funciones.get(i).getPuntoCritico()[1]) / 2) + funciones.get(i).getPuntoCritico()[1];
+                    if (distancia > 100)
+                        distancia = 100;
+                    puntos.add(new Punto(distancia, 0));
                 }
             } else {
                 double d;
                 if (funciones.get(i).getPuntoCritico().length == 1) {
                     d = getD(i, puntos);
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
-                    double x = funciones.get(i).getPuntoCritico()[0] + d;
+                    double x = puntos.get(1).getX() + (puntos.get(1).getX() - puntos.get(0).getX());
                     if (x>100)
                         x=100;
                     puntos.add(new Punto(x, 0));
@@ -78,7 +81,7 @@ public class Variable {
                     d = getD(i, puntos);
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1], 1));
-                    double x = funciones.get(i).getPuntoCritico()[1] + d;
+                    double x = funciones.get(i).getPuntoCritico()[1]+ (puntos.get(0).getX()) - d;
                     if (x > 100)
                         x=100;
                     puntos.add(new Punto(x, 0));
@@ -94,12 +97,15 @@ public class Variable {
 
             if (size2 == 3)
             {
-                d=funciones.get(i-1).getPuntos().get(0).getX() - funciones.get(i-1).getPuntos().get(2).getX()/100 * funciones.get(i).getTraslape();
+                double dPuntos =funciones.get(i-1).getPuntos().get(2).getX() - funciones.get(i-1).getPuntos().get(1).getX();
+                double traslape = funciones.get(i).getTraslape();
+                double porcentaje =traslape/100;
+                d=(dPuntos) * (porcentaje);
                 puntos.add(new Punto(funciones.get(i-1).getPuntos().get(2).getX() - d, 0));
             }
             else if (size2 == 4)
             {
-                d=funciones.get(i-1).getPuntos().get(0).getX() - funciones.get(i-1).getPuntos().get(3).getX()/100 * funciones.get(i).getTraslape();
+                d=(funciones.get(i-1).getPuntos().get(3).getX() - funciones.get(i-1).getPuntos().get(2).getX())/100 * funciones.get(i).getTraslape();
                 puntos.add(new Punto(funciones.get(i-1).getPuntos().get(3).getX() - d, 0));
 
             }
