@@ -87,7 +87,7 @@ public class Variable {
                     d = getD(i, puntos);
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1], 1));
-                    double x = funciones.get(i).getPuntoCritico()[1]+ (puntos.get(0).getX()) - d;
+                    double x = puntos.get(2).getX() + (puntos.get(1).getX() - puntos.get(0).getX());
                     if (x > 100)
                         x=100;
                     puntos.add(new Punto(x, 0));
