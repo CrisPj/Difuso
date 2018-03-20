@@ -66,7 +66,7 @@ public class Variable {
                     double distancia;
                     if (puntos.get(0).getX() == puntos.get(1).getX())
                     {
-                        distancia = ((funciones.get(i).getPuntoCritico()[0] + funciones.get(i).getPuntoCritico()[1]) / 2) + funciones.get(i).getPuntoCritico()[1];
+                        distancia = funciones.get(i).getPuntoCritico()[1]  + ((funciones.get(i).getPuntoCritico()[1] - funciones.get(i).getPuntoCritico()[0])) * funciones.get(i).getTraslape()/100;
                     }
                     else
                         distancia = funciones.get(i).getPuntoCritico()[1] + (puntos.get(1).getX() - puntos.get(0).getX());

@@ -6,12 +6,10 @@ import com.pythonteam.arbol.Variable;
 import com.pythonteam.archivos.ArchivoReglas;
 import com.pythonteam.archivos.ArchivoMaestro;
 import com.pythonteam.common.Constantes;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class API {
 
@@ -48,14 +46,19 @@ public class API {
         archivoMaestro.nuevoRegistro(var);
     }
 
-    public Funcion inferencia(JsonObject body)
+    public double inferencia(JsonObject body)
     {
-        JsonArray json = body.getJsonArray("");
-        System.exit(0);
+        JsonArray json = body.getJsonArray("valores");
+
+        ArrayList<Double> entradas = new ArrayList<>();
+
+        for (int i = 0; i < json.size(); i++) {
+            entradas.add(json.getJsonObject(i).getDouble("valor"));
+        }
+
         ArrayList<Variable> listaVariables = archivoMaestro.imprimirReglas();
-        //InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
-       // return inferencia.calcularSalida();
-        return null;
+        InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
+       return inferencia.calcularSalida().getValorDifuso();
     }
 
     public ArrayList getAllVars() {

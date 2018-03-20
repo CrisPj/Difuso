@@ -51,10 +51,10 @@ public class Main {
 
     private static void inference(RoutingContext routingContext) {
         try {
-            api.inferencia(routingContext.getBodyAsJson());
+
             routingContext.response()
                     .setStatusCode(201)
-                    .end(Json.encodePrettily(api.getAllVars()));
+                    .end(Json.encodePrettily(api.inferencia(routingContext.getBodyAsJson())));
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
