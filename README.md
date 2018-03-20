@@ -17,14 +17,14 @@ Readme
 			"puntoCritico": [
 				30.0
 			],
-			"translape": 10
+			"traslape": 10
 		},
 		{
 			"nombre": "Buena",
 			"puntoCritico": [
 				80.0,90.0
 			],
-			"translape": 30
+			"traslape": 30
 		}
 	]
 }

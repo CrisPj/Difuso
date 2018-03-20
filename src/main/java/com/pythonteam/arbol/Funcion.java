@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Funcion {
     private String nombre;
     private double puntoCritico[];
-    private int translape;
+    private int traslape;
     private ArrayList<Punto> puntos;
     private double valorDifuso;
 
@@ -67,12 +67,12 @@ public class Funcion {
         this.puntoCritico = puntoCritico;
     }
 
-    public int getTranslape() {
-        return translape;
+    public int getTraslape() {
+        return traslape;
     }
 
-    public void setTranslape(int translape) {
-        this.translape = translape;
+    public void setTraslape(int traslape) {
+        this.traslape = traslape;
     }
 
     public ArrayList<Punto> getPuntos() {

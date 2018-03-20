@@ -8,6 +8,7 @@ public class Variable {
     private String alias;
     private ArrayList<Funcion> funciones;
     private boolean salida;
+    private int traslape;
     private ArrayList<Punto> intersecciones;
 
     public String getNombre() {
@@ -89,10 +90,10 @@ public class Variable {
     private double getD(int i, ArrayList<Punto> puntos) {
         double d;
         if (funciones.get(i - 1).getPuntoCritico().length == 1) {
-            d = (funciones.get(i).getPuntoCritico()[0] - funciones.get(i - 1).getPuntoCritico()[0])/100 * funciones.get(i).getTranslape();
+            d = (funciones.get(i).getPuntoCritico()[0] - funciones.get(i - 1).getPuntoCritico()[0])/100 * funciones.get(i).getTraslape();
             puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0] - d, 0));
         } else {
-            d = (funciones.get(i).getPuntoCritico()[0] - funciones.get(i - 1).getPuntoCritico()[1])/100 * funciones.get(i).getTranslape();
+            d = (funciones.get(i).getPuntoCritico()[0] - funciones.get(i - 1).getPuntoCritico()[1])/100 * funciones.get(i).getTraslape();
             puntos.add(new Punto(d, 0));
         }
         return d;

@@ -63,7 +63,7 @@ public class ArchivoMaestro {
                             nombre[j] = archivo.readChar();
                         }
                         f.setNombre(new String(nombre).trim());
-                        f.setTranslape(archivo.readInt());
+                        f.setTraslape(archivo.readInt());
                         int size = archivo.readInt();
 
                         double puntos[] = new double[size];
@@ -114,7 +114,7 @@ public class ArchivoMaestro {
                 buffer.setLength(Constantes.TAM_REGISTRO);
                 archivo.writeChars(buffer.toString());
 
-                archivo.writeInt(f.getTranslape());
+                archivo.writeInt(f.getTraslape());
                 archivo.writeInt(f.getPuntoCritico().length);
                 for (int i = 0; i < f.getPuntoCritico().length; i++) {
                     archivo.writeDouble(f.getPuntoCritico()[i]);
