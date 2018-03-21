@@ -91,10 +91,12 @@ public class API {
 
     public void rmVar(JsonObject bodyAsJson) {
         archivoMaestro.eliminarRegla(bodyAsJson.getInteger("id"));
+        genRules();
     }
 
     public void updateVar(JsonObject bodyAsJson) {
         archivoMaestro.editarRegla(bodyAsJson.mapTo(Variable.class));
+        genRules();
     }
 
     public Variable getVar(int id) {
