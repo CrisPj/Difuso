@@ -3,6 +3,7 @@ package com.pythonteam.arbol;
 import java.util.ArrayList;
 
 public class Regla {
+    private int id;
     private ArrayList<Elemento> antecedentes;
     private Elemento consecuente;
 
@@ -20,5 +21,13 @@ public class Regla {
 
     public void setConsecuente(Elemento consecuente) {
         this.consecuente = consecuente;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

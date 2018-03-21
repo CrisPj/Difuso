@@ -34,10 +34,12 @@ public class Main {
         router.route("/inference").handler(Main::inference);
 
         router.route("/updateVar").handler(Main::updateVar);
+        router.route("/updateRule").handler(Main::updateRule);
 
         router.route("/rmVar").handler(Main::rmVar);
 
         router.route("/getVar/:id").handler(Main::getVar);
+        router.route("/getRule/:id").handler(Main::getRule);
 
         router.route("/getVars").handler(routingContext -> routingContext.response()
                 .putHeader("content-type", "application/json; charset=utf-8")
@@ -51,6 +53,32 @@ public class Main {
         vertx.createHttpServer()
                 .requestHandler(router::accept)
                 .listen(8080);
+    }
+
+    private static void getRule(RoutingContext routingContext) {
+        try {
+            int id = Integer.parseInt(routingContext.request().getParam("id"));
+            routingContext.response()
+                    .setStatusCode(201)
+                    .end(Json.encodePrettily(api.getRule(id)));
+        } catch (Exception e) {
+            routingContext.response()
+                    .putHeader("content-type", "application/json; charset=utf-8")
+                    .setStatusCode(404).end("{\"error\":\"No se pudo actualizar\"}");
+        }
+    }
+
+    private static void updateRule(RoutingContext routingContext) {
+        try {
+            api.updateRule(routingContext.getBodyAsJson());
+            routingContext.response()
+                    .setStatusCode(201)
+                    .end(Json.encodePrettily(api.getAllVars()));
+        } catch (Exception e) {
+            routingContext.response()
+                    .putHeader("content-type", "application/json; charset=utf-8")
+                    .setStatusCode(404).end("{\"error\":\"No se pudo crear la regla\"}");
+        }
     }
 
     private static void inference(RoutingContext routingContext) {

@@ -1,5 +1,7 @@
 package com.pythonteam.archivos;
 
+import com.pythonteam.arbol.Elemento;
+import com.pythonteam.arbol.Regla;
 import com.pythonteam.common.Constantes;
 
 import java.io.IOException;
@@ -10,10 +12,10 @@ public class ArchivoReglas
 {
 
     private RandomAccessFile file;
-    private ArrayList<String> hechos;
+    private ArrayList<Regla> reglas;
 
     public ArchivoReglas(String nombre, String permisos) {
-        hechos = new ArrayList<>();
+        reglas = new ArrayList<>();
         try {
             file = new RandomAccessFile(nombre + Constantes.EXTENCION_REGLAS, permisos);
             if (file.length() > 0)
@@ -23,70 +25,138 @@ public class ArchivoReglas
         }
     }
 
+    public boolean isEmpty() throws IOException {
+        return file.length() == 0;
+    }
+
     private void readFile() {
         try {
             file.seek(0);
-            do {
+            for (int x = 0; x < file.length(); x++) {
+                Regla r = new Regla();
+                r.setId(file.readInt());
+                ArrayList<Elemento> elementos = new ArrayList<>();
+                char[] registroActual = new char[Constantes.TAM_REGISTRO];
+                int z = file.readInt();
+                for (int i = 0; i < z; i++) {
 
-                char[] hecho = new char[Constantes.TAM_REGISTRO];
-                for (int i = 0; i < Constantes.TAM_REGISTRO; i++)
-                    hecho[i] = file.readChar();
-                hechos.add(new String(hecho).trim());
-            }while (true);
+                    Elemento e = new Elemento();
+                    for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
+                        registroActual[j] = file.readChar();
+                    }
+                    e.setAlias(new String(registroActual).trim());
+                    for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
+                        registroActual[j] = file.readChar();
+                    }
+                    e.setFuncion(new String(registroActual).trim());
+                    e.setValorDifuso(file.readDouble());
+                    elementos.add(e);
+                }
+                r.setAntecedentes(elementos);
+                registroActual = new char[Constantes.TAM_REGISTRO];
+                Elemento e = new Elemento();
+                for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
+                    registroActual[j] = file.readChar();
+                }
+                e.setAlias(new String(registroActual).trim());
+                for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
+                    registroActual[j] = file.readChar();
+                }
+                e.setFuncion(new String(registroActual).trim());
+                e.setValorDifuso(file.readDouble());
+                r.setConsecuente(e);
+                reglas.add(r);
+            }
         } catch (IOException e) {
             System.out.println("Se ha leido el archivo de indices por completo");
         }
     }
 
-    public void insertarHecho(String hecho) {
-        hechos.add(hecho);
-        try {
-            StringBuilder buffer = new StringBuilder(hecho);
+
+    public boolean editarRegla(Regla regla) {
+        Regla r = reglas.get(regla.getId());
+        r.setId(regla.getId());
+        r.setAntecedentes(regla.getAntecedentes());
+        r.setConsecuente(regla.getConsecuente());
+        writeFile();
+        return true;
+    }
+
+    void escribir(Regla r) throws IOException {
+        StringBuffer buffer;
+        file.writeInt(r.getId());
+            file.writeInt(r.getAntecedentes().size());
+            for (Elemento e:r.getAntecedentes()) {
+                buffer = new StringBuffer(e.getAlias());
+                buffer.setLength(Constantes.TAM_REGISTRO);
+                file.writeChars(buffer.toString());
+                buffer = new StringBuffer(e.getFuncion());
+                buffer.setLength(Constantes.TAM_REGISTRO);
+                file.writeChars(buffer.toString());
+                if (e.getValorDifuso()==null)
+                    e.setValorDifuso(0.0);
+                file.writeDouble(e.getValorDifuso());
+            }
+            Elemento e = r.getConsecuente();
+            if (e == null)
+                e = new Elemento();
+            if (e.getAlias() == null)
+                e.setAlias("");
+            buffer = new StringBuffer(e.getAlias());
             buffer.setLength(Constantes.TAM_REGISTRO);
             file.writeChars(buffer.toString());
+            if (e.getFuncion()== null)
+                e.setFuncion("");
+            buffer = new StringBuffer(e.getFuncion());
+            buffer.setLength(Constantes.TAM_REGISTRO);
+            file.writeChars(buffer.toString());
+            if (e.getValorDifuso() == null)
+                e.setValorDifuso(0.0);
+            file.writeDouble(e.getValorDifuso());
+    }
+
+    public void insertarRegla(Regla r) {
+        reglas.add(r);
+        try{
+            escribir(r);
         } catch (Exception ex) {
-            System.out.println("No se pudo insertar hecho");
+            System.out.println("No se pudo insertar Regla");
         }
     }
 
-    public ArrayList<String> obtenerHechos() {
-        return hechos;
+    public ArrayList<Regla> obtenerReglas() {
+        return reglas;
     }
-
-    public String imprimirHechos() {
-        StringBuilder retorno = new StringBuilder();
-        for (String hecho : obtenerHechos())
-            retorno.append(hecho).append("\n");
-        return retorno.toString();
-    }
-
 
     public void writeFile()
     {
         borrarReglas();
-        for (String hecho : hechos) {
-            StringBuilder buffer = new StringBuilder(hecho);
-            buffer.setLength(Constantes.TAM_REGISTRO);
-            try {
-                file.writeChars(buffer.toString());
-            } catch (IOException e) {
-                System.exit(0);
+        try {
+            file.seek(0);
+            for (Regla r:reglas) {
+                escribir(r);
             }
+        } catch (Exception e)
+        {
+            System.out.println("Fallor al escribir la regla");
         }
     }
 
-    public void borrarHecho(String borrar)
+    public void borrarHecho(int id)
     {
-        hechos.removeIf(e -> e.equals(borrar));
+        reglas.removeIf(e -> e.getId()==id);
     }
 
     public void borrarReglas() {
-        hechos.clear();
+        reglas.clear();
         try {
             file.setLength(0);
         } catch (Exception ex) {
-            System.out.println("Hechos no pudieron ser eliminados");
+            System.out.println("reglas no pudieron ser eliminados");
         }
     }
 
+    public Regla obtenerRegla(int id) {
+        return reglas.stream().filter(v -> v.getId() == id).findFirst().orElse(null);
+    }
 }

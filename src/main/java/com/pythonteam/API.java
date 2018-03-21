@@ -7,6 +7,7 @@ import com.pythonteam.common.Constantes;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class API {
@@ -18,8 +19,14 @@ public class API {
         archivoMaestro = new ArchivoMaestro(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
         archivoMaestro.generarArbol();
         archivoReglas = new ArchivoReglas(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
-        // Se borran los hechos al inicio del programa:
-        archivoReglas.borrarReglas();
+        try {
+            if (archivoReglas.isEmpty())
+            {
+                genRules();
+            }
+        } catch (IOException e) {
+            System.out.println("no se puede crear las reglas");
+        }
     }
 
     public void addVar(JsonObject bodyAsJson) throws Exception {
@@ -61,6 +68,14 @@ public class API {
         return 0.0;
     }
 
+    public Regla getRule(int id){
+        return archivoReglas.obtenerRegla(id);
+    }
+
+    public void updateRule(JsonObject body) {
+        archivoReglas.editarRegla(body.mapTo(Regla.class));
+    }
+
     public ArrayList getAllVars() {
         return archivoMaestro.imprimirReglas();
     }
@@ -77,9 +92,8 @@ public class API {
         return archivoMaestro.obtenerRegla(id);
     }
 
-    public ArrayList<Regla> getAllRules() {
-
-        Regla r = new Regla();
+    public ArrayList<Regla> genRules() {
+        int id = 0;
         ArrayList<Elemento> elementos;
         ArrayList<ArrayList> elchido = new ArrayList<>();
 
@@ -96,7 +110,6 @@ public class API {
                 }
                 elchido.add(elementos);
             }
-
         }
 
         int contadores[] = new int[elchido.size()];
@@ -106,30 +119,33 @@ public class API {
             contadores[i] = elchido.get(i).size();
             numReglas *= (contadores[i]);
         }
-        ArrayList<Regla> reglas = new ArrayList<>(numReglas);
         int contadores3[] = new int[contadores.length];
         System.arraycopy(contadores,0,contadores3,0,contadores.length);
-
         for (int i = numReglas; i > 0; i--) {
             ArrayList<Elemento> auxElementos = new ArrayList<>();
             for (int j = 0; j < contadores.length; j++) {
-                int y = contadores3[j]-1;
-                auxElementos.add((Elemento) elchido.get(j).get(y));
+                auxElementos.add((Elemento) elchido.get(j).get(contadores3[j]-1));
             }
             Regla auxR = new Regla();
             auxR.setAntecedentes(auxElementos);
-            reglas.add(auxR);
+            auxR.setId(id);
+            id++;
+            archivoReglas.insertarRegla(auxR);
             for (int j = contadores.length-1; j >=0 ; j--)
             {
-                    if (contadores3[j] == 1) {
-                        contadores3[j] = contadores[j];
-                    }
-                    else {
-                        contadores3[j]--;
-                        break;
-                    }
+                if (contadores3[j] == 1) {
+                    contadores3[j] = contadores[j];
+                }
+                else {
+                    contadores3[j]--;
+                    break;
                 }
             }
-        return reglas;
+        }
+        return archivoReglas.obtenerReglas();
+    }
+
+    public ArrayList<Regla> getAllRules() {
+        return archivoReglas.obtenerReglas();
     }
 }
