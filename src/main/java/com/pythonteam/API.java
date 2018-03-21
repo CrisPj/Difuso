@@ -71,10 +71,9 @@ public class API {
         genRules();
 
         double max = archivoReglas.getMax();
-        //Centroide c = new Centroide();
-
-
-       // c.calcCentroide(listaVariables.stream());
+        Variable salida = listaVariables.stream().filter(Variable::isSalida).findFirst().orElse(null);
+        Centroide c = new Centroide(salida,max);
+        c.getCentroide();
         return max ;
     }
 
@@ -126,34 +125,39 @@ public class API {
 
         int contadores[] = new int[elchido.size()];
 
-        int numReglas = 1;
-        for (int i = 0; i < contadores.length; i++) {
-            contadores[i] = elchido.get(i).size();
-            numReglas *= (contadores[i]);
-        }
-        int contadores3[] = new int[contadores.length];
-        System.arraycopy(contadores,0,contadores3,0,contadores.length);
-        for (int i = numReglas; i > 0; i--) {
-            ArrayList<Elemento> auxElementos = new ArrayList<>();
-            for (int j = 0; j < contadores.length; j++) {
-                auxElementos.add((Elemento) elchido.get(j).get(contadores3[j]-1));
+        int numReglas;
+        numReglas = elchido.size() > 0 ? 1 : 0;
+        if (numReglas != 0)
+        {
+            for (int i = 0; i < contadores.length; i++) {
+                contadores[i] = elchido.get(i).size();
+                numReglas *= (contadores[i]);
             }
-            Regla auxR = new Regla();
-            auxR.setAntecedentes(auxElementos);
-            auxR.setId(id);
-            id++;
-            archivoReglas.insertarRegla(auxR);
-            for (int j = contadores.length-1; j >=0 ; j--)
-            {
-                if (contadores3[j] == 1) {
-                    contadores3[j] = contadores[j];
+            int contadores3[] = new int[contadores.length];
+            System.arraycopy(contadores,0,contadores3,0,contadores.length);
+            for (int i = numReglas; i > 0; i--) {
+                ArrayList<Elemento> auxElementos = new ArrayList<>();
+                for (int j = 0; j < contadores.length; j++) {
+                    auxElementos.add((Elemento) elchido.get(j).get(contadores3[j]-1));
                 }
-                else {
-                    contadores3[j]--;
-                    break;
+                Regla auxR = new Regla();
+                auxR.setAntecedentes(auxElementos);
+                auxR.setId(id);
+                id++;
+                archivoReglas.insertarRegla(auxR);
+                for (int j = contadores.length-1; j >=0 ; j--)
+                {
+                    if (contadores3[j] == 1) {
+                        contadores3[j] = contadores[j];
+                    }
+                    else {
+                        contadores3[j]--;
+                        break;
+                    }
                 }
             }
         }
+
         return archivoReglas.obtenerReglas();
     }
 

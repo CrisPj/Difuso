@@ -6,6 +6,7 @@ public class Centroide
 {
     private Variable variable;
     private double membresia;
+    private int resultado;
 
     public Centroide(Variable variable, double membresia) {
         this.variable = variable;
@@ -30,6 +31,9 @@ public class Centroide
     }
 
 
+    public double getCentroide() {
+        return resultado;
+    }
 }
 
 
