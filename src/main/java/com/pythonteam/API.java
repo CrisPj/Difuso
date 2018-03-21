@@ -7,7 +7,6 @@ import com.pythonteam.common.Constantes;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class API {
@@ -20,12 +19,9 @@ public class API {
         archivoMaestro.generarArbol();
         archivoReglas = new ArchivoReglas(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
         try {
-            if (archivoReglas.isEmpty())
-            {
-                genRules();
-            }
-        } catch (IOException e) {
-            System.out.println("no se puede crear las reglas");
+            genRules();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -81,20 +77,16 @@ public class API {
         return archivoReglas.obtenerRegla(id);
     }
 
-    public void updateRule(JsonObject body) {
-        archivoReglas.editarRegla(body.mapTo(Regla.class));
-    }
-
     public ArrayList getAllVars() {
         return archivoMaestro.imprimirReglas();
     }
 
-    public void rmVar(JsonObject bodyAsJson) {
+    public void rmVar(JsonObject bodyAsJson) throws Exception {
         archivoMaestro.eliminarRegla(bodyAsJson.getInteger("id"));
         genRules();
     }
 
-    public void updateVar(JsonObject bodyAsJson) {
+    public void updateVar(JsonObject bodyAsJson) throws Exception {
         archivoMaestro.editarRegla(bodyAsJson.mapTo(Variable.class));
         genRules();
     }
@@ -103,14 +95,30 @@ public class API {
         return archivoMaestro.obtenerRegla(id);
     }
 
-    public ArrayList<Regla> genRules()
-    {
+    public void genRules() throws Exception {
         archivoReglas.borrarReglas();
         int id = 0;
         ArrayList<Elemento> elementos;
         ArrayList<ArrayList> elchido = new ArrayList<>();
 
         ArrayList<Variable> variables = archivoMaestro.imprimirReglas();
+
+        Variable salida = null;
+        for (Variable var : variables) {
+            if (var.isSalida())
+                salida = var;
+        }
+        if (salida == null)
+            return;
+            //throw new Exception("No hay varibles de salida");
+
+        double maxs[] = new double[salida.getFunciones().size()];
+
+        ArrayList<Funcion> funciones = salida.getFunciones();
+        for (int i = 0, funcionesSize = funciones.size(); i < funcionesSize; i++) {
+            Funcion f =funciones.get(i);
+            maxs[i]=f.getPuntos().get(f.getPuntos().size() - 1).getX();
+        }
 
         for (Variable var : variables) {
             elementos = new ArrayList<>();
@@ -140,12 +148,34 @@ public class API {
             System.arraycopy(contadores,0,contadores3,0,contadores.length);
             for (int i = numReglas; i > 0; i--) {
                 ArrayList<Elemento> auxElementos = new ArrayList<>();
+                double maxs2 = 1.0;
                 for (int j = 0; j < contadores.length; j++) {
-                    auxElementos.add((Elemento) elchido.get(j).get(contadores3[j]-1));
+                    Elemento ele = (Elemento) elchido.get(j).get(contadores3[j]-1);
+                    auxElementos.add(ele);
+                    maxs2 += variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().get(variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().size()-1).getX();
                 }
+
+                maxs2 = maxs2/contadores.length;
+
                 Regla auxR = new Regla();
                 auxR.setAntecedentes(auxElementos);
                 auxR.setId(id);
+                Elemento consecuente = new Elemento();
+                consecuente.setValorDifuso(0.0);
+                consecuente.setAlias(salida.getAlias());
+
+                int funcion = -1;
+                for (int z = 0; z < contadores.length; z++) {
+                    if (maxs2 < maxs[z]) {
+                        funcion = z;
+                        break;
+                    }
+                }
+                if (funcion == -1)
+                    throw new Exception("Error desconocido");
+
+                consecuente.setFuncion(salida.getFunciones().get(funcion).getNombre());
+                auxR.setConsecuente(consecuente);
                 id++;
                 archivoReglas.insertarRegla(auxR);
                 for (int j = contadores.length-1; j >=0 ; j--)
@@ -160,8 +190,6 @@ public class API {
                 }
             }
         }
-
-        return archivoReglas.obtenerReglas();
     }
 
     public ArrayList<Regla> getAllRules() {

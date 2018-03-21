@@ -34,8 +34,6 @@ public class Main {
         router.route("/inference").handler(Main::inference);
 
         router.route("/updateVar").handler(Main::updateVar);
-        router.route("/updateRule").handler(Main::updateRule);
-
         router.route("/rmVar").handler(Main::rmVar);
 
         router.route("/getVar/:id").handler(Main::getVar);
@@ -68,18 +66,6 @@ public class Main {
         }
     }
 
-    private static void updateRule(RoutingContext routingContext) {
-        try {
-            api.updateRule(routingContext.getBodyAsJson());
-            routingContext.response()
-                    .setStatusCode(201)
-                    .end(Json.encodePrettily(api.getAllVars()));
-        } catch (Exception e) {
-            routingContext.response()
-                    .putHeader("content-type", "application/json; charset=utf-8")
-                    .setStatusCode(404).end("{\"error\":\"No se pudo crear la regla\"}");
-        }
-    }
 
     private static void inference(RoutingContext routingContext) {
         try {
@@ -142,7 +128,7 @@ public class Main {
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
-                    .setStatusCode(404).end("{\"error\":\"Campos no deben ir vacios\"}");
+                    .setStatusCode(404).end("{\"error\":\""+e.getMessage()+"\"}");
         }
 
     }

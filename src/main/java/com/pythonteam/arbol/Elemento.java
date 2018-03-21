@@ -4,6 +4,24 @@ public class Elemento {
     private String alias;
     private Double valorDifuso;
     private String funcion;
+    private int idAlias;
+    private int idFuncion;
+
+    public int getIdAlias() {
+        return idAlias;
+    }
+
+    public void setIdAlias(int idAlias) {
+        this.idAlias = idAlias;
+    }
+
+    public int getIdFuncion() {
+        return idFuncion;
+    }
+
+    public void setIdFuncion(int idFuncion) {
+        this.idFuncion = idFuncion;
+    }
 
     public Elemento(String alias, String funcion, Double valorDifuso) {
         this.alias = alias;

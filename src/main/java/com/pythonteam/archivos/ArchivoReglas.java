@@ -3,6 +3,8 @@ package com.pythonteam.archivos;
 import com.pythonteam.arbol.Elemento;
 import com.pythonteam.arbol.Regla;
 import com.pythonteam.common.Constantes;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -41,10 +43,12 @@ public class ArchivoReglas
                 for (int i = 0; i < z; i++) {
 
                     Elemento e = new Elemento();
+                    e.setIdAlias(file.readInt());
                     for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
                         registroActual[j] = file.readChar();
                     }
                     e.setAlias(new String(registroActual).trim());
+                    e.setIdFuncion(file.readInt());
                     for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
                         registroActual[j] = file.readChar();
                     }
@@ -87,9 +91,12 @@ public class ArchivoReglas
         file.writeInt(r.getId());
             file.writeInt(r.getAntecedentes().size());
             for (Elemento e:r.getAntecedentes()) {
+                file.writeInt(e.getIdAlias());
                 buffer = new StringBuffer(e.getAlias());
                 buffer.setLength(Constantes.TAM_REGISTRO);
                 file.writeChars(buffer.toString());
+
+                file.writeInt(e.getIdFuncion());
                 buffer = new StringBuffer(e.getFuncion());
                 buffer.setLength(Constantes.TAM_REGISTRO);
                 file.writeChars(buffer.toString());
