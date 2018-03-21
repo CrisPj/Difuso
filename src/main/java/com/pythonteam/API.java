@@ -51,6 +51,7 @@ public class API {
         }
         var.setFunciones(funciones);
         archivoMaestro.nuevoRegistro(var);
+        genRules();
     }
 
     public double inferencia(JsonObject body) throws Exception {
