@@ -105,6 +105,7 @@ public class API {
 
     public ArrayList<Regla> genRules()
     {
+        archivoReglas.borrarReglas();
         int id = 0;
         ArrayList<Elemento> elementos;
         ArrayList<ArrayList> elchido = new ArrayList<>();
