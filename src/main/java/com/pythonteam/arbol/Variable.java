@@ -9,10 +9,8 @@ public class Variable {
     private ArrayList<Funcion> funciones;
     private boolean salida;
     private int traslape;
-    private ArrayList<Punto> intersecciones;
 
     public Variable() {
-        intersecciones = new ArrayList<>();
     }
 
     public String getNombre() {
@@ -46,11 +44,6 @@ public class Variable {
     public void setFunciones(ArrayList<Funcion> funciones) {
         this.funciones = funciones;
         genPuntos();
-    }
-
-    public void evaluar(double x)
-    {
-
     }
 
     private void genPuntos() {
@@ -120,38 +113,6 @@ public class Variable {
 
             }
         return d;
-    }
-
-
-    public void calcularIntersecciones() {
-
-
-        for(int i=0;i<funciones.size()-1;i++)
-        {
-            Funcion f1 =funciones.get(i);
-            Funcion f2 =funciones.get(i+1);
-
-            //Penultimo punto de la funcion 1
-            Double x1a = f1.getPuntos().get(f1.getPuntos().size()-2).getX();
-            //No importa para la segunda funcion que forma tenga siempre se ocupa el primer y segundo punto
-            Double x2b = f2.getPuntos().get(1).getX();
-            //CAlculamos el punto medio entre las dos funciones
-            //el punto medio tambien es el punto de interseccion entre las dos funciones
-            Double puntoM = (x1a+x2b)/2;
-            //Calcular el valor de y en el punto medio
-            Double puntoMy = f1.calcMembresia(puntoM);
-            //Guardar el punto en el arreglo de intersecciones
-            intersecciones.add(new Punto(puntoM, puntoMy));
-        }
-
-    }
-
-    public void setIntersecciones(ArrayList<Punto> intersecciones) {
-        this.intersecciones = intersecciones;
-    }
-
-    public ArrayList<Punto> getIntersecciones() {
-        return intersecciones;
     }
 
     public boolean isSalida() {

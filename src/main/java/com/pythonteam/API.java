@@ -69,8 +69,12 @@ public class API {
         archivoReglas.borrarReglas();
         genRules();
 
-        archivoReglas.getMax();
-        return archivoReglas.getMax();
+        double max = archivoReglas.getMax();
+        //Centroide c = new Centroide();
+
+
+       // c.calcCentroide(listaVariables.stream());
+        return max ;
     }
 
     public Regla getRule(int id){
