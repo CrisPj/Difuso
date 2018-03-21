@@ -3,7 +3,9 @@ package com.pythonteam.arbol;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InferenciaDifusa {
+public class InferenciaDifusa
+{
+    /*
     private ArrayList<Variable> listaVariables;
     private ArrayList<Double> entradas;
 
@@ -16,17 +18,20 @@ public class InferenciaDifusa {
 
     /*
      * Este metodo es el que realiza el proceso de inferencia difusa
-     */
-    public Funcion calcularSalida() {
+     *
+    public Funcion calcularSalida() throws Exception {
         Double resultado = 0.0;
         Double membresia = 0.0;
 
         /*****************************+
          Difusificar                |
-         *****************************/
+         *****************************
 
         //el indice se utiliza para poder iterar el arreglo de entradas al mismo tiempo y mantener la sintaxis foreach mas legible
         int indice = 0;
+
+        if ( listaVariables.size()<3 && listaVariables.stream().anyMatch(Variable::isSalida))
+            throw new Exception("Se necesitan mas variables");
 
         //Calcular la membresia de cada valor linguistico con las variables de entrada
         for (Variable variable : listaVariables) {
@@ -51,7 +56,7 @@ public class InferenciaDifusa {
 
         /*****************************+
          Evaluar Reglas             |
-         *****************************/
+         *****************************
 
         //Producto cartesiano para obtener las reglas
         //Se obtienen dos arreglos de arreglos, el primero tiene los valores linguisticos que forma la regla
@@ -68,7 +73,7 @@ public class InferenciaDifusa {
         String cadenaConsecuente = "";
         Boolean consecuenteRepetido;
         //esta clase tiene la funcion hash para obtener los consecuentes
-        // TODO OBTENER CONSECUENTES
+        Regla r = new Regla();
 
         for (i=0 ; i<cadenas.size() ; i++) {
 
@@ -92,7 +97,7 @@ public class InferenciaDifusa {
 
             //evaluar regla con funcion hash para obtener consecuente
             //TODO
-            //cadenaConsecuente = reg.getConsecuente(regla).trim();
+            cadenaConsecuente = r.getConsecuente().getAlias();
 
             //recorrer los consecuentes para reemplazar si es necesario la membresia de un valor existente
             consecuenteRepetido = false;
@@ -114,7 +119,7 @@ public class InferenciaDifusa {
 
         /*******************************************************+
          Agregacion de los consecuentes de las reglas         |
-         *******************************************************/
+         *******************************************************
 
         //funcion donde se van a guardar los puntos que formaran la funcion de agregacion
         Funcion funcionAgr = new Funcion();
@@ -143,18 +148,18 @@ public class InferenciaDifusa {
 
             //obtener el consecuente que corresponda con el valor actual
             for (Consecuente cons : consecuentes) {
-                String nombreCortado = valor.getNombre().substring(0, 2);
-                if (nombreCortado.equals(cons.getAlias()))
+                String alias = valor.getNombre();
+                if (alias.equals(cons.getAlias()))
                     consec = cons;
             }
 
             /**********************************************************
              * Si es el primer valor linguistico es un caso especial
-             **********************************************************/
+             **********************************************************
             if (index == 0) {
                 /*******************************
                  * Caso 1: consecuente > f(0)
-                 ******************************/
+                 ******************************
                 if (consec.getValorDifuso() > valor.calcMembresia(0.0)) {
                     x = 0.0;
                     y = valor.calcMembresia(x);
@@ -166,7 +171,7 @@ public class InferenciaDifusa {
                 }
                 /*******************************
                  * Caso 2: consecuente <= f(0)
-                 ******************************/
+                 ******************************
                 else {
                     x = 0.0;
                     y = consec.getValorDifuso();
@@ -176,7 +181,7 @@ public class InferenciaDifusa {
                 //El punto antes de la interseccion depende de la relacion entre la membresia y el punto de interseccion
                 /***************************************
                  * Caso A: consecuente > interseccion
-                 **************************************/
+                 **************************************
                 if (consec.getValorDifuso() > varSalida.getIntersecciones().get(index).getY()) {
                     //El siguiente punto es la interseccion del consecuente con la ultima linea de la funcion
                     y = consec.getValorDifuso();
@@ -185,14 +190,14 @@ public class InferenciaDifusa {
                 }
                 /***************************************
                  * Caso B: consecuente == interseccion
-                 **************************************/
+                 **************************************
                 else if (consec.getValorDifuso() == varSalida.getIntersecciones().get(index).getY()) {
                     //en este caso no se agrega un punto extra, solo el punto de la interseccion que tambien aplica para los
                     //otros casos y que se agrega fuera la condicion
                 }
                 /***************************************
                  * Caso C: consecuente < interseccion
-                 **************************************/
+                 **************************************
                 else {
                     //El siguiente punto es la interseccion del consecuente con la primera linea de la siguiente funcion
                     Funcion valorSiguiente = valores.get(index+1);
@@ -203,7 +208,7 @@ public class InferenciaDifusa {
 
                 /*************************************
                  * Esto ocurre para todos los casos
-                 ************************************/
+                 ************************************
                 //Se agrega el punto de interseccion entre ambos valores
                 x = varSalida.getIntersecciones().get(index).getX();
                 y = valor.calcMembresia(x);
@@ -212,11 +217,11 @@ public class InferenciaDifusa {
             }
             /**********************************************************
              * Caso para los valores de en medio
-             **********************************************************/
+             **********************************************************
             else if (index < valores.size()-1) {
                 /************************************************************************
                  * Caso 1: El consecuente es mayor que el punto de interseccion anterior
-                 ***********************************************************************/
+                 ***********************************************************************
                 if (consec.getValorDifuso() > varSalida.getIntersecciones().get(index-1).getY()) {
                     //El punto se calcula con la primera recta del valor actual
                     y = consec.getValorDifuso();
@@ -225,13 +230,13 @@ public class InferenciaDifusa {
                 }
                 /************************************************************************
                  * Caso 2: El consecuente es igual que el punto de interseccion anterior
-                 ***********************************************************************/
+                 ***********************************************************************
                 else if (consec.getValorDifuso() == varSalida.getIntersecciones().get(index-1).getY()) {
                     //No hace falta agregar puntos adicionales en este caso
                 }
                 /************************************************************************
                  * Caso 3: El consecuente es menor que el punto de interseccion anterior
-                 ***********************************************************************/
+                 ***********************************************************************
                 else {
                     //El punto se calcula con la ultima recta de la funcion anterior
                     Funcion valorAnterior = valores.get(index-1);
@@ -242,11 +247,11 @@ public class InferenciaDifusa {
 
                 /**********************************************
                  * Esto ocurre para los tres casos anteriores
-                 *********************************************/
+                 *********************************************
                 //El punto antes de la interseccion depende de la relacion entre la membresia y el punto de interseccion
                 /***************************************
                  * Caso A: consecuente > interseccion
-                 **************************************/
+                 **************************************
                 if (consec.getValorDifuso() > varSalida.getIntersecciones().get(index).getY()) {
                     //El siguiente punto es la interseccion del consecuente con la ultima linea de la funcion
                     y = consec.getValorDifuso();
@@ -255,14 +260,14 @@ public class InferenciaDifusa {
                 }
                 /***************************************
                  * Caso B: consecuente == interseccion
-                 **************************************/
+                 **************************************
                 else if (consec.getValorDifuso() == varSalida.getIntersecciones().get(index).getY()) {
                     //en este caso no se agrega un punto extra, solo el punto de la interseccion que tambien aplica para los
                     //otros casos y que se agrega fuera la condicion
                 }
                 /***************************************
                  * Caso C: consecuente < interseccion
-                 **************************************/
+                 **************************************
                 else {
                     //El siguiente punto es la interseccion del consecuente con la primera linea de la siguiente funcion
                     Funcion valorSiguiente = valores.get(index+1);
@@ -273,7 +278,7 @@ public class InferenciaDifusa {
 
                 /*************************************
                  * Esto ocurre para todos los casos
-                 ************************************/
+                 ************************************
                 //Se agrega el punto de interseccion entre ambos valores
                 x = varSalida.getIntersecciones().get(index).getX();
                 y = valor.calcMembresia(x);
@@ -281,11 +286,11 @@ public class InferenciaDifusa {
             }
             /**********************************************************
              * Caso para el ultimo valor
-             **********************************************************/
+             **********************************************************
             else {
                 /************************************************************************
                  * Caso 1: El consecuente es mayor que el punto de interseccion anterior
-                 ***********************************************************************/
+                 ***********************************************************************
                 if (consec.getValorDifuso() > varSalida.getIntersecciones().get(index-1).getY()) {
                     //El punto se calcula con la primera recta del valor actual
                     y = consec.getValorDifuso();
@@ -294,13 +299,13 @@ public class InferenciaDifusa {
                 }
                 /************************************************************************
                  * Caso 2: El consecuente es igual que el punto de interseccion anterior
-                 ***********************************************************************/
+                 ***********************************************************************
                 else if (consec.getValorDifuso() == varSalida.getIntersecciones().get(index-1).getY()) {
                     //No hace falta agregar puntos adicionales en este caso
                 }
                 /************************************************************************
                  * Caso 3: El consecuente es menor que el punto de interseccion anterior
-                 ***********************************************************************/
+                 ***********************************************************************
                 else {
                     //El punto se calcula con la ultima recta de la funcion anterior
                     Funcion valorAnterior = valores.get(index-1);
@@ -311,7 +316,7 @@ public class InferenciaDifusa {
 
                 /********************************************************************
                  * El ulitmo punto termina en 100 y esta a la altura del consecuente
-                 *******************************************************************/
+                 *******************************************************************
                 y = consec.getValorDifuso();
                 x = 100.0;
                 funcionAgr.getPuntos().add(new Punto(x,y));
@@ -323,9 +328,9 @@ public class InferenciaDifusa {
 
         /***********************************************
          Calcular el centroide con los puntos obtenidos
-         **********************************************/
+         **********************************************
         /*Centroide cent = new Centroide();
-        resultado = cent.calcCentroide(funcionAgr.getPuntos());*/
+        resultado = cent.calcCentroide(funcionAgr.getPuntos());*
         Double sumaNumerador=0.0, sumaDenominador=0.0;
 
         for (int z=0 ; z<100 ; z++) {
@@ -341,7 +346,7 @@ public class InferenciaDifusa {
     /*
      * Este metodo se utiliza en conjunto con productoCartesianoListasCadenas para obtner
      * las combinaciones de cadenas de los valores
-     */
+     *
     private List<List<String>> getCombinacionCadenas()
     {
         List<List<String>> vari = new ArrayList();
@@ -409,7 +414,7 @@ public class InferenciaDifusa {
     /*
      * Este metodo se utiliza en conjunto con productoCartesianoListasMembresias para obtner
      * las combinaciones de cadenas de los valores
-     */
+     *
     private List<List<Double>> getCombinacionMembresias()
     {
         List<List<Double>> vari = new ArrayList();
@@ -473,4 +478,5 @@ public class InferenciaDifusa {
         //Enviamos las combinaciones resultantes hacia atras recursivo OnO
         return resultLists;
     }
+    */
 }

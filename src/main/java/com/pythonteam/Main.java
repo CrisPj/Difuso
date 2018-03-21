@@ -43,6 +43,10 @@ public class Main {
                 .putHeader("content-type", "application/json; charset=utf-8")
                 .end(Json.encode(api.getAllVars())));
 
+        router.route("/getRules").handler(routingContext -> routingContext.response()
+                .putHeader("content-type", "application/json; charset=utf-8")
+                .end(Json.encode(api.getAllRules())));
+
 
         vertx.createHttpServer()
                 .requestHandler(router::accept)

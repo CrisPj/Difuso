@@ -1,8 +1,6 @@
 package com.pythonteam;
 
-import com.pythonteam.arbol.Funcion;
-import com.pythonteam.arbol.InferenciaDifusa;
-import com.pythonteam.arbol.Variable;
+import com.pythonteam.arbol.*;
 import com.pythonteam.archivos.ArchivoReglas;
 import com.pythonteam.archivos.ArchivoMaestro;
 import com.pythonteam.common.Constantes;
@@ -37,6 +35,7 @@ public class API {
             throw new Exception();
         var.setNombre(nombre);
         var.setAlias(bodyAsJson.getString("alias"));
+        if (bodyAsJson.containsKey("salida"))
         var.setSalida(bodyAsJson.getBoolean("salida"));
         JsonArray al = bodyAsJson.getJsonArray("funciones");
         ArrayList<Funcion> funciones = new ArrayList<>();
@@ -47,19 +46,19 @@ public class API {
         archivoMaestro.nuevoRegistro(var);
     }
 
-    public double inferencia(JsonObject body)
-    {
+    public double inferencia(JsonObject body) throws Exception {
         JsonArray json = body.getJsonArray("valores");
 
         ArrayList<Double> entradas = new ArrayList<>();
 
         for (int i = 0; i < json.size(); i++) {
-            entradas.add(json.getJsonObject(i).getDouble("valor"));
+            entradas.add(Double.valueOf(json.getJsonObject(i).getString("valor")));
         }
 
         ArrayList<Variable> listaVariables = archivoMaestro.imprimirReglas();
-        InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
-       return inferencia.calcularSalida().getValorDifuso();
+        //InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
+       //return inferencia.calcularSalida().getValorDifuso();
+        return 0.0;
     }
 
     public ArrayList getAllVars() {
@@ -76,5 +75,61 @@ public class API {
 
     public Variable getVar(int id) {
         return archivoMaestro.obtenerRegla(id);
+    }
+
+    public ArrayList<Regla> getAllRules() {
+
+        Regla r = new Regla();
+        ArrayList<Elemento> elementos;
+        ArrayList<ArrayList> elchido = new ArrayList<>();
+
+        ArrayList<Variable> variables = archivoMaestro.imprimirReglas();
+
+        for (Variable var : variables) {
+            elementos = new ArrayList<>();
+            if (!var.isSalida()) {
+                for (Funcion fun : var.getFunciones()) {
+                    Elemento ele = new Elemento();
+                    ele.setAlias(var.getAlias());
+                    ele.setFuncion(fun.getNombre());
+                    elementos.add(ele);
+                }
+                elchido.add(elementos);
+            }
+
+        }
+
+        int contadores[] = new int[elchido.size()];
+
+        int numReglas = 1;
+        for (int i = 0; i < contadores.length; i++) {
+            contadores[i] = elchido.get(i).size();
+            numReglas *= (contadores[i]);
+        }
+        ArrayList<Regla> reglas = new ArrayList<>(numReglas);
+        int contadores3[] = new int[contadores.length];
+        System.arraycopy(contadores,0,contadores3,0,contadores.length);
+
+        for (int i = numReglas; i > 0; i--) {
+            ArrayList<Elemento> auxElementos = new ArrayList<>();
+            for (int j = 0; j < contadores.length; j++) {
+                int y = contadores3[j]-1;
+                auxElementos.add((Elemento) elchido.get(j).get(y));
+            }
+            Regla auxR = new Regla();
+            auxR.setAntecedentes(auxElementos);
+            reglas.add(auxR);
+            for (int j = contadores.length-1; j >=0 ; j--)
+            {
+                    if (contadores3[j] == 1) {
+                        contadores3[j] = contadores[j];
+                    }
+                    else {
+                        contadores3[j]--;
+                        break;
+                    }
+                }
+            }
+        return reglas;
     }
 }

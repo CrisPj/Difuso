@@ -1,12 +1,17 @@
 package com.pythonteam.arbol;
 
-public class Consecuente {
+public class Elemento {
     private String alias;
     private Double valorDifuso;
+    private String funcion;
 
-    public Consecuente(String alias, Double valorDifuso) {
+    public Elemento(String alias, String funcion, Double valorDifuso) {
         this.alias = alias;
+        this.funcion = funcion;
         this.valorDifuso = valorDifuso;
+    }
+
+    public Elemento() {
     }
 
     public String getAlias() {
@@ -23,5 +28,13 @@ public class Consecuente {
 
     public void setValorDifuso(Double valorDifuso) {
         this.valorDifuso = valorDifuso;
+    }
+
+    public String getFuncion() {
+        return funcion;
+    }
+
+    public void setFuncion(String funcion) {
+        this.funcion = funcion;
     }
 }

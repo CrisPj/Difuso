@@ -11,6 +11,10 @@ public class Variable {
     private int traslape;
     private ArrayList<Punto> intersecciones;
 
+    public Variable() {
+        intersecciones = new ArrayList<>();
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -120,6 +124,7 @@ public class Variable {
 
 
     public void calcularIntersecciones() {
+
 
         for(int i=0;i<funciones.size()-1;i++)
         {
