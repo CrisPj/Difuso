@@ -54,6 +54,7 @@ public class API {
     }
 
     public double inferencia(JsonObject body) throws Exception {
+
         JsonArray json = body.getJsonArray("valores");
 
         ArrayList<Double> entradas = new ArrayList<>();
@@ -63,9 +64,13 @@ public class API {
         }
 
         ArrayList<Variable> listaVariables = archivoMaestro.imprimirReglas();
-        //InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
-       //return inferencia.calcularSalida().getValorDifuso();
-        return 0.0;
+        InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
+        inferencia.calcularSalida();
+        archivoReglas.borrarReglas();
+        genRules();
+
+        archivoReglas.getMax();
+        return archivoReglas.getMax();
     }
 
     public Regla getRule(int id){
@@ -92,7 +97,8 @@ public class API {
         return archivoMaestro.obtenerRegla(id);
     }
 
-    public ArrayList<Regla> genRules() {
+    public ArrayList<Regla> genRules()
+    {
         int id = 0;
         ArrayList<Elemento> elementos;
         ArrayList<ArrayList> elchido = new ArrayList<>();
@@ -106,6 +112,7 @@ public class API {
                     Elemento ele = new Elemento();
                     ele.setAlias(var.getAlias());
                     ele.setFuncion(fun.getNombre());
+                    ele.setValorDifuso(fun.getValorDifuso());
                     elementos.add(ele);
                 }
                 elchido.add(elementos);

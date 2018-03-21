@@ -159,4 +159,15 @@ public class ArchivoReglas
     public Regla obtenerRegla(int id) {
         return reglas.stream().filter(v -> v.getId() == id).findFirst().orElse(null);
     }
+
+    public double getMax() {
+        double max = -1;
+        for (Regla r : reglas) {
+            ArrayList<Elemento> antecedentes = r.getAntecedentes();
+            for (Elemento e : antecedentes) {
+                if (max < e.getValorDifuso()) max = e.getValorDifuso();
+            }
+        }
+        return max;
+    }
 }
