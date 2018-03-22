@@ -200,7 +200,7 @@ public class API {
                 consecuente.setAlias(salida.getAlias());
 
                 int funcion = -1;
-                for (int z = 0; z < contadores.length; z++) {
+                for (int z = 0; z <= contadores.length; z++) {
                     if (maxs2 <= maxs[z]) {
                         funcion = z;
                         break;

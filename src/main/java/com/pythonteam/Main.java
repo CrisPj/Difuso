@@ -102,7 +102,7 @@ public class Main {
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
-                    .setStatusCode(404).end("{\"error\":\"No se pudo actualizar\"}");
+                    .setStatusCode(404).end("{\"error\":\""+e.getMessage()+"\"}");
         }
     }
 
