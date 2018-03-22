@@ -39,7 +39,8 @@ public class Centroide
 
                         }
                         else {
-                            puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
+                            if (flag)
+                                puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
                             puntitos.add(new Punto(f.getPuntos().get(2).getX(), f.getPuntos().get(2).getY()));
                         }
 
@@ -49,8 +50,8 @@ public class Centroide
                             puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
                             flag = false;
                         }
-                        puntitos.add(new Punto((f.getPuntos().get(1).getX() - f.getPuntos().get(0).getX()) / 2, maximos[i]));
-                        puntitos.add(new Punto((f.getPuntos().get(2).getX() - f.getPuntos().get(1).getX()) / 2, maximos[i]));
+                        puntitos.add(new Punto((f.getPuntos().get(0).getX()+(f.getPuntos().get(1).getX() - f.getPuntos().get(0).getX()) / 2), maximos[i]));
+                        puntitos.add(new Punto((f.getPuntos().get(1).getX()+(f.getPuntos().get(2).getX() - f.getPuntos().get(1).getX()) / 2), maximos[i]));
                         if (i == funciones.size()-1)
                         {
                             puntitos.add(new Punto(f.getPuntos().get(2).getX(), f.getPuntos().get(2).getY()));

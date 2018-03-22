@@ -150,7 +150,7 @@ public class ArchivoMaestro {
 
     public boolean editarRegla(Variable var)
     {
-        Variable vr = variables.get(var.getId());
+        Variable vr = obtenerRegla(var.getId());
         vr.setId(var.getId());
         vr.setNombre(var.getNombre());
         vr.setSalida(var.isSalida());
