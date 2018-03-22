@@ -68,7 +68,7 @@ public class API {
 
         ArrayList<Elemento>  consecuentes = new ArrayList<>();
         for (Regla r : archivoReglas.obtenerReglas()) {
-            double min = 420;
+            double min = 1.0;
             for (Elemento e : r.getAntecedentes()) {
                 if (e.getValorDifuso() < min)
                     min = e.getValorDifuso();
@@ -77,7 +77,6 @@ public class API {
             consecuentes.add(r.getConsecuente());
         }
 
-        double max = archivoReglas.getMax();
         Variable salida = listaVariables.stream().filter(Variable::isSalida).findFirst().orElse(null);
         if (salida == null)
             throw new Exception("No hay salida");
