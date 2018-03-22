@@ -63,7 +63,6 @@ public class API {
         ArrayList<Variable> listaVariables = archivoMaestro.imprimirReglas();
         InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
         inferencia.calcularSalida();
-        archivoReglas.borrarReglas();
         genRules();
 
         double max = archivoReglas.getMax();
@@ -123,9 +122,13 @@ public class API {
         for (Variable var : variables) {
             elementos = new ArrayList<>();
             if (!var.isSalida()) {
-                for (Funcion fun : var.getFunciones()) {
+                ArrayList<Funcion> funciones1 = var.getFunciones();
+                for (int i = 0, funciones1Size = funciones1.size(); i < funciones1Size; i++) {
+                    Funcion fun = funciones1.get(i);
                     Elemento ele = new Elemento();
+                    ele.setIdAlias(var.getId());
                     ele.setAlias(var.getAlias());
+                    ele.setIdFuncion(i);
                     ele.setFuncion(fun.getNombre());
                     ele.setValorDifuso(fun.getValorDifuso());
                     elementos.add(ele);
@@ -152,10 +155,12 @@ public class API {
                 for (int j = 0; j < contadores.length; j++) {
                     Elemento ele = (Elemento) elchido.get(j).get(contadores3[j]-1);
                     auxElementos.add(ele);
-                    maxs2 += variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().get(variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().size()-1).getX();
+                    maxs2 += variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntoCritico()[variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntoCritico().length-1];
                 }
 
                 maxs2 = maxs2/contadores.length;
+                if (maxs2>100)
+                    maxs2 = 100;
 
                 Regla auxR = new Regla();
                 auxR.setAntecedentes(auxElementos);
@@ -166,7 +171,7 @@ public class API {
 
                 int funcion = -1;
                 for (int z = 0; z < contadores.length; z++) {
-                    if (maxs2 < maxs[z]) {
+                    if (maxs2 <= maxs[z]) {
                         funcion = z;
                         break;
                     }
