@@ -50,7 +50,7 @@ public class API {
         genRules();
     }
 
-    public double inferencia(JsonObject body) throws Exception {
+    public ArrayList<Punto> inferencia(JsonObject body) throws Exception {
 
         JsonArray json = body.getJsonArray("valores");
 
@@ -64,12 +64,41 @@ public class API {
         InferenciaDifusa inferencia = new InferenciaDifusa(listaVariables, entradas);
         inferencia.calcularSalida();
         genRules();
+        archivoReglas.obtenerReglas();
+
+        ArrayList<Elemento>  consecuentes = new ArrayList<>();
+        for (Regla r : archivoReglas.obtenerReglas()) {
+            double min = 420;
+            for (Elemento e : r.getAntecedentes()) {
+                if (e.getValorDifuso() < min)
+                    min = e.getValorDifuso();
+            }
+            r.getConsecuente().setValorDifuso(min);
+            consecuentes.add(r.getConsecuente());
+        }
 
         double max = archivoReglas.getMax();
         Variable salida = listaVariables.stream().filter(Variable::isSalida).findFirst().orElse(null);
-        Centroide c = new Centroide(salida,max);
-        c.getCentroide();
-        return max ;
+        if (salida == null)
+            throw new Exception("No hay salida");
+
+        double valores[] = new double[salida.getFunciones().size()];
+        for (int i = 0; i < salida.getFunciones().size(); i++) {
+            double maximo = 0;
+
+            for (Elemento c:consecuentes) {
+                if (c.getIdFuncion() == i)
+                {
+                    if (c.getValorDifuso() > maximo)
+                        maximo = c.getValorDifuso();
+                }
+            }
+            valores[i] = maximo;
+        }
+
+        Centroide c = new Centroide(salida,valores);
+
+        return c.genArea();
     }
 
     public Regla getRule(int id){
@@ -167,6 +196,7 @@ public class API {
                 auxR.setId(id);
                 Elemento consecuente = new Elemento();
                 consecuente.setValorDifuso(0.0);
+                consecuente.setIdAlias(salida.getId());
                 consecuente.setAlias(salida.getAlias());
 
                 int funcion = -1;
@@ -180,6 +210,7 @@ public class API {
                     throw new Exception("Error desconocido");
 
                 consecuente.setFuncion(salida.getFunciones().get(funcion).getNombre());
+                consecuente.setIdFuncion(funcion);
                 auxR.setConsecuente(consecuente);
                 id++;
                 archivoReglas.insertarRegla(auxR);

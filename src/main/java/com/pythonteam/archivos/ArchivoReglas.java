@@ -109,11 +109,14 @@ public class ArchivoReglas
                 e = new Elemento();
             if (e.getAlias() == null)
                 e.setAlias("");
+
+            file.writeInt(e.getIdAlias());
             buffer = new StringBuffer(e.getAlias());
             buffer.setLength(Constantes.TAM_REGISTRO);
             file.writeChars(buffer.toString());
             if (e.getFuncion()== null)
                 e.setFuncion("");
+            file.writeInt(e.getIdFuncion());
             buffer = new StringBuffer(e.getFuncion());
             buffer.setLength(Constantes.TAM_REGISTRO);
             file.writeChars(buffer.toString());
