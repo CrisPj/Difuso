@@ -89,8 +89,23 @@ public class Centroide
         double sum2 = 0;
         for (int j = 0; j <puntitos.size()-1; j++) {
             for (double k = puntitos.get(j).getX(); k < puntitos.get(j+1).getX(); k++) {
-                sum1 += puntitos.get(j).getY();
-                sum2 = sum2 + (puntitos.get(j).getY() * k);
+                if (puntitos.get(j) != puntitos.get(j+1))
+                {
+
+                    double difX = puntitos.get(j+1).getX() - puntitos.get(j).getX();
+
+                    double dify = Math.abs(puntitos.get(j+1).getY() - puntitos.get(j).getY());
+
+                    double calc = dify / difX;
+                    sum1 += calc;
+                    sum2  = sum2 + (calc * k);
+                }
+                else
+                {
+                    sum1 += puntitos.get(j).getY();
+                    sum2  = sum2 + (puntitos.get(j).getY() * k);
+                }
+
             }
         }
         if (sum1 == 0)
