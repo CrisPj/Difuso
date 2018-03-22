@@ -25,7 +25,7 @@ public class Centroide
                     puntitos.add(new Punto(p.getX(), p.getY()));
             }
         }
-        int i = 0;
+        /*int i = 0;
         while (i < puntitos.size())
         {
             if(puntitos.get(i).getY() == 0 && i != 0 && i != puntitos.size())
@@ -35,6 +35,7 @@ public class Centroide
             else
             i++;
         }
+        */
 
         double sum1 = 0;
         double sum2 = 0;
