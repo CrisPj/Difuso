@@ -50,7 +50,7 @@ public class API {
         genRules();
     }
 
-    public double inferencia(JsonObject body) throws Exception {
+    public Resultado inferencia(JsonObject body) throws Exception {
 
         JsonArray json = body.getJsonArray("valores");
 
