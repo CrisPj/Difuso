@@ -27,9 +27,16 @@ public class Centroide
                         {
                             puntitos.add(new Punto(f.getPuntos().get(2).getX(),f.getPuntos().get(2).getY()));
                         }
-                        else if (f.getPuntos().get(0).getX()==0)
+                        if (f.getPuntos().get(0).getX()==0)
                         {
                             puntitos.add(new Punto(f.getPuntos().get(0).getX(),f.getPuntos().get(0).getY()));
+                            flag = true;
+                            if (maximos[i+1] == 0)
+                            {
+                                puntitos.add(new Punto(f.getPuntos().get(2).getX(),f.getPuntos().get(2).getY()));
+                                flag = false;
+                            }
+
                         }
                         else {
                             puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
@@ -55,10 +62,11 @@ public class Centroide
                                 Double x1a = f.getPuntos().get(f.getPuntos().size()-2).getX();
                                 Double x2b = f2.getPuntos().get(1).getX();
                                 Double puntoM = (x1a+x2b)/2;
-                                Double puntoMy = (f2.calcMembresia(puntoM) + f.calcMembresia(puntoM))/2;
+                                Double puntoMy = maximos[i+1];
                                 puntitos.add(new Punto(puntoM, puntoMy));
-                                flag = true;
-                            }else puntitos.add(new Punto(f.getPuntos().get(2).getX(), f.getPuntos().get(2).getY()));;
+                            }else {
+                                puntitos.add(new Punto(f.getPuntos().get(2).getX(), f.getPuntos().get(2).getY()));
+                            }
 
                         }
 
@@ -71,12 +79,19 @@ public class Centroide
                         {
                             puntitos.add(new Punto(f.getPuntos().get(3).getX(),f.getPuntos().get(3).getY()));
                         }
-                        else if (f.getPuntos().get(0).getX()==0)
+                        if (f.getPuntos().get(0).getX()==0)
                         {
                             puntitos.add(new Punto(f.getPuntos().get(0).getX(),f.getPuntos().get(0).getY()));
+                            flag=true;
+                            if (maximos[i+1] == 0)
+                            {
+                                puntitos.add(new Punto(f.getPuntos().get(3).getX(),f.getPuntos().get(3).getY()));
+                                flag=false;
+                            }
                         }
                         else {
-                            puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
+                            if (flag)
+                                puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
                             puntitos.add(new Punto(f.getPuntos().get(3).getX(), f.getPuntos().get(3).getY()));
                         }
                     }
@@ -90,7 +105,7 @@ public class Centroide
                         puntitos.add(new Punto(f.getPuntos().get(2).getX(), maximos[i]));
                         if (i == funciones.size()-1)
                         {
-                            puntitos.add(new Punto(f.getPuntos().get(3).getX(), f.getPuntos().get(0).getY()));
+                            puntitos.add(new Punto(f.getPuntos().get(3).getX(), f.getPuntos().get(3).getY()));
                         }
                         else {
                             if (maximos[i+1] != 0)
@@ -99,10 +114,11 @@ public class Centroide
                                 Double x1a = f.getPuntos().get(f.getPuntos().size()-2).getX();
                                 Double x2b = f2.getPuntos().get(1).getX();
                                 Double puntoM = (x1a+x2b)/2;
-                                Double puntoMy = (f2.calcMembresia(puntoM) + f.calcMembresia(puntoM))/2;
+                                Double puntoMy = maximos[i+1];
                                 puntitos.add(new Punto(puntoM, puntoMy));
-                                flag = true;
-                            }else puntitos.add(new Punto(f.getPuntos().get(3).getX(), f.getPuntos().get(3).getY()));;
+                            }else {
+                                puntitos.add(new Punto(f.getPuntos().get(3).getX(), f.getPuntos().get(3).getY()));
+                            }
 
                         }
 
