@@ -13,7 +13,7 @@ public class Centroide
     }
 
 
-    public ArrayList<Punto> genArea() {
+    public double genArea() {
         ArrayList<Punto> puntitos = new ArrayList<>();
         ArrayList<Funcion> funciones = variable.getFunciones();
         for (int i = 0; i < funciones.size(); i++) {
@@ -29,12 +29,22 @@ public class Centroide
         while (i < puntitos.size())
         {
             if(puntitos.get(i).getY() == 0 && i != 0 && i != puntitos.size())
+            {
                 puntitos.remove(i);
+            }
+            else
             i++;
         }
-        return puntitos;
+        double sum1 = 0;
+        double sum2 = 0;
+        for (int j = 0; j <puntitos.size()-1; j++) {
+            for (double k = puntitos.get(j).getX(); k < puntitos.get(j+1).getX(); k++) {
+                sum1 += puntitos.get(j).getY();
+                sum2 += puntitos.get(j).getY() * k;
+            }
+        }
+        return Math.ceil(sum2/sum1);
     }
 
 }
-
 

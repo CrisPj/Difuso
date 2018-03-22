@@ -50,7 +50,7 @@ public class API {
         genRules();
     }
 
-    public ArrayList<Punto> inferencia(JsonObject body) throws Exception {
+    public double inferencia(JsonObject body) throws Exception {
 
         JsonArray json = body.getJsonArray("valores");
 
