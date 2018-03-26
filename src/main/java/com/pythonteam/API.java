@@ -185,13 +185,14 @@ public class API {
                 for (int j = 0; j < contadores.length; j++) {
                     Elemento ele = (Elemento) elchido.get(j).get(contadores3[j]-1);
                     auxElementos.add(ele);
-                    maxs2 = maxs2 + variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().get(variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().size()-1).getX();
+                    double h = variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().get(variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().size()-1).getX();
+                    h = h - (salida.getFunciones().size() * (salida.getFunciones().size()*3));
+                        maxs2 += h;
                 }
 
-                maxs2 = maxs2/contadores.length;
-                if (maxs2>100)
+                maxs2 = maxs2 / contadores.length;
+                if (maxs2 > 100)
                     maxs2 = 100;
-
                 Regla auxR = new Regla();
                 auxR.setAntecedentes(auxElementos);
                 auxR.setId(id);

@@ -16,7 +16,6 @@ public class Centroide
     public Resultado genArea() {
         ArrayList<Punto> puntitos = new ArrayList<>();
         ArrayList<Funcion> funciones = variable.getFunciones();
-        boolean flag = false;
         for (int i = 0; i < funciones.size(); i++) {
             Funcion f = funciones.get(i);
 
@@ -31,14 +30,20 @@ public class Centroide
                             * (f.getPuntos().get(1).getX() - f.getPuntos().get(0).getX()) + f.getPuntos().get(0).getX();
                     puntitos.add(new Punto(chido, maximos[i]));
                     puntitos.add(new Punto(f.getPuntos().get(1).getX() + (f.getPuntos().get(1).getX()-chido), maximos[i]));
+                    if (f.getPuntos().get(2).getY() != 0)
+                        puntitos.add(new Punto(f.getPuntos().get(2).getX(), f.getPuntos().get(2).getY()));
+                    else
+                        puntitos.add(new Punto(f.getPuntos().get(2).getX(), 0));
 
 
-                    puntitos.add(new Punto(f.getPuntos().get(2).getX(), f.getPuntos().get(2).getY()));
                 } else if (f.getPuntos().size() == 4) {
                     puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
                     puntitos.add(new Punto(f.getPuntos().get(1).getX(), maximos[i]));
                     puntitos.add(new Punto(f.getPuntos().get(2).getX(), maximos[i]));
-                    puntitos.add(new Punto(f.getPuntos().get(3).getX(), f.getPuntos().get(3).getY()));
+                    if (f.getPuntos().get(3).getY() != 0)
+                        puntitos.add(new Punto(f.getPuntos().get(3).getX(), f.getPuntos().get(3).getY() ));
+                    else
+                        puntitos.add(new Punto(f.getPuntos().get(3).getX(), 0));
                 }
             }
         }

@@ -67,8 +67,7 @@ public class Variable {
                     }
                     else
                         distancia = funciones.get(i).getPuntoCritico()[1] + (puntos.get(1).getX() - puntos.get(0).getX());
-                    if (distancia > 100)
-                        distancia = 100;
+
                     puntos.add(new Punto(distancia, 0));
                 }
             } else {
@@ -77,17 +76,30 @@ public class Variable {
                     d = getD(i, puntos);
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     double x = puntos.get(1).getX() + (puntos.get(1).getX() - puntos.get(0).getX());
-                    if (x>100)
-                        x=100;
                     puntos.add(new Punto(x, 0));
+                    if (x>100)
+                    {
+                        Funcion fake = new Funcion();
+                        fake.setPuntos(puntos);
+                        double y = fake.calcMembresia(100);
+                        puntos.remove(2);
+                        puntos.add(new Punto(100,y));
+                    }
+
                 } else if (funciones.get(i).getPuntoCritico().length == 2) {
                     d = getD(i, puntos);
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[0], 1));
                     puntos.add(new Punto(funciones.get(i).getPuntoCritico()[1], 1));
                     double x = puntos.get(2).getX() + (puntos.get(1).getX() - puntos.get(0).getX());
-                    if (x > 100)
-                        x=100;
                     puntos.add(new Punto(x, 0));
+                    if (x>100)
+                    {
+                        Funcion fake = new Funcion();
+                        fake.setPuntos(puntos);
+                        double y = fake.calcMembresia(100);
+                        puntos.remove(3);
+                        puntos.add(new Punto(100,y));
+                    }
                 }
             }
             funciones.get(i).setPuntos(puntos);
