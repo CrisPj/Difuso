@@ -11,37 +11,34 @@ import java.util.List;
 /**
  * @author PythonTeam :v
  */
-public class ArchivoIndice
-{
+public class ArchivoIndice {
 
     private RandomAccessFile archivo;
     private List<Indice> indices;
 
     /**
-     * @param nombre Nombre del archivo
+     * @param nombre   Nombre del archivo
      * @param permisos Permisos que tendra el archivo
      */
-    public ArchivoIndice(String nombre, String permisos)
-    {
+    public ArchivoIndice(String nombre, String permisos) {
         indices = new ArrayList<>();
         try {
             archivo = new RandomAccessFile(nombre, permisos);
             if (archivo.length() > 0)
                 readFile();
         } catch (Exception ex) {
-            System.out.println("Fallo al crear el archivo indice\n"+ ex.getMessage());
+            System.out.println("Fallo al crear el archivo indice\n" + ex.getMessage());
         }
     }
 
     /**
-     *
      * Escribe un nuevo registro, especificando
      *
-     * @param llave del registro
+     * @param llave     del registro
      * @param dirLogica del registro
      */
     public void nuevo(int llave, long dirLogica) {
-        indices.add(new Indice(llave,dirLogica));
+        indices.add(new Indice(llave, dirLogica));
         try {
             archivo.seek(archivo.length());
             archivo.writeByte(llave);
@@ -52,7 +49,6 @@ public class ArchivoIndice
     }
 
     /**
-     *
      * @return ArrayList<String>
      */
     public List<Indice> getDirRegistros() {
@@ -60,29 +56,24 @@ public class ArchivoIndice
     }
 
     public List<Indice> mostrarIndice() {
-            return indices;
+        return indices;
     }
 
-    public long buscar(int llave)
-    {
+    public long buscar(int llave) {
         return indices.stream().filter(indice -> indice.getLlave() == llave).findFirst().map(Indice::getDireccion).orElse((long) -1);
     }
 
-    private void readFile()
-    {
+    private void readFile() {
         try {
             archivo.seek(0);
-            do {
-
-                indices.add(new Indice(archivo.readByte(), archivo.readLong()));
-            }while (true);
+            for (int i = 0; i < archivo.length()-1; i=i+9)
+            indices.add(new Indice(archivo.readByte(), archivo.readLong()));
         } catch (IOException e) {
-            System.out.println("Se ha leido el archivo de indices por completo");
+            e.printStackTrace();
         }
     }
 
-    public void writeFile()
-    {
+    public void writeFile() {
         limpiarArchivo();
         try {
             archivo.seek(0);
@@ -96,18 +87,15 @@ public class ArchivoIndice
         }
     }
 
-    public void eliminar(int llave)
-    {
-        indices.removeIf(e-> e.getLlave() == llave);
+    public void eliminar(int llave) {
+        indices.removeIf(e -> e.getLlave() == llave);
     }
 
-    public void limpiarLista()
-    {
+    public void limpiarLista() {
         indices.clear();
     }
 
-    public void limpiarTodo()
-    {
+    public void limpiarTodo() {
         limpiarArchivo();
         limpiarLista();
     }

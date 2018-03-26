@@ -16,9 +16,7 @@ public class InferenciaDifusa
 
 
     public void calcularSalida() throws Exception {
-        Double resultado = 0.0;
-        Double membresia = 0.0;
-
+        Double membresia;
         int indice = 0;
 
         if (listaVariables.size() < 3 && listaVariables.stream().anyMatch(Variable::isSalida))
@@ -26,7 +24,6 @@ public class InferenciaDifusa
 
         for (Variable variable : listaVariables)
         {
-
             if (!variable.isSalida())
             {
                 Double variableEntradaActual = entradas.get(indice);
@@ -35,6 +32,8 @@ public class InferenciaDifusa
                 {
                     membresia = fs.calcMembresia(variableEntradaActual);
                     fs.setValorDifuso(membresia);
+                    System.out.println("El valor de membresia en Variable: " + variable.getNombre()+ " en funcion:  "
+                            +  fs.getNombre() + " es de " + membresia);
                 }
                 indice++;
             }

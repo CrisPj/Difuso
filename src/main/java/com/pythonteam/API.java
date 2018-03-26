@@ -92,6 +92,9 @@ public class API {
                         maximo = c.getValorDifuso();
                 }
             }
+            System.out.println("El valor maximo en salida  " + salida.getNombre() + " en funcion:  "
+                    + salida.getFunciones().get(i).getNombre() + " es de " + maximo);
+
             valores[i] = maximo;
         }
 
@@ -130,11 +133,10 @@ public class API {
 
         ArrayList<Variable> variables = archivoMaestro.imprimirReglas();
 
-        Variable salida = null;
-        for (Variable var : variables) {
-            if (var.isSalida())
-                salida = var;
-        }
+        Variable salida;
+        salida = variables.stream().filter(Variable::isSalida).findFirst().orElse(null);
+
+
         if (salida == null)
             return;
             //throw new Exception("No hay varibles de salida");
@@ -179,11 +181,11 @@ public class API {
             System.arraycopy(contadores,0,contadores3,0,contadores.length);
             for (int i = numReglas; i > 0; i--) {
                 ArrayList<Elemento> auxElementos = new ArrayList<>();
-                double maxs2 = 1.0;
+                double maxs2 = 0;
                 for (int j = 0; j < contadores.length; j++) {
                     Elemento ele = (Elemento) elchido.get(j).get(contadores3[j]-1);
                     auxElementos.add(ele);
-                    maxs2 += variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntoCritico()[variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntoCritico().length-1];
+                    maxs2 = maxs2 + variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().get(variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().size()-1).getX();
                 }
 
                 maxs2 = maxs2/contadores.length;
