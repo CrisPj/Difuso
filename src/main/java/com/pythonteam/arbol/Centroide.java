@@ -20,7 +20,8 @@ public class Centroide
             Funcion f = funciones.get(i);
 
             if (maximos[i] != 0) {
-                if (f.getPuntos().size() == 3) {
+                if (f.getPuntos().size() == 3)
+                {
                     puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
 
                     // ((y-y1)/(y2-y1))(x2-x2) + x1
@@ -28,19 +29,24 @@ public class Centroide
                             (maximos[i] - f.getPuntos().get(0).getY())
                                     / (f.getPuntos().get(1).getY() - f.getPuntos().get(0).getY()))
                             * (f.getPuntos().get(1).getX() - f.getPuntos().get(0).getX()) + f.getPuntos().get(0).getX();
+
                     puntitos.add(new Punto(chido, maximos[i]));
-                    puntitos.add(new Punto(f.getPuntos().get(1).getX() + (f.getPuntos().get(1).getX()-chido), maximos[i]));
+                    if (maximos[i] != f.getPuntos().get(1).getY())
+                        puntitos.add(new Punto(f.getPuntos().get(1).getX() + (f.getPuntos().get(1).getX()-chido), maximos[i]));
                     if (f.getPuntos().get(2).getY() != 0)
                         puntitos.add(new Punto(f.getPuntos().get(2).getX(), f.getPuntos().get(2).getY()));
                     else
                         puntitos.add(new Punto(f.getPuntos().get(2).getX(), 0));
 
 
-                } else if (f.getPuntos().size() == 4) {
+                }
+                else if (f.getPuntos().size() == 4) {
                     puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
                     puntitos.add(new Punto(f.getPuntos().get(1).getX(), maximos[i]));
                     puntitos.add(new Punto(f.getPuntos().get(2).getX(), maximos[i]));
-                    if (f.getPuntos().get(3).getY() != 0)
+                    if ( f.getPuntos().get(3).getY()  > maximos[i])
+                        puntitos.add(new Punto(f.getPuntos().get(3).getX(), maximos[i]));
+                    else if (f.getPuntos().get(3).getY() != 0)
                         puntitos.add(new Punto(f.getPuntos().get(3).getX(), f.getPuntos().get(3).getY() ));
                     else
                         puntitos.add(new Punto(f.getPuntos().get(3).getX(), 0));
@@ -53,9 +59,6 @@ public class Centroide
         double sum2 = 0;
         for (int j = 0; j <puntitos.size()-1; j++) {
             for (double k = puntitos.get(j).getX(); k < puntitos.get(j+1).getX(); k++) {
-
-                if (puntitos.get(j).getY() == 0)
-                    break;
                 if (puntitos.get(j).getY() != puntitos.get(j+1).getY())
                 {
                     double difX = puntitos.get(j+1).getX() - puntitos.get(j).getX();
