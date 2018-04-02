@@ -1,6 +1,12 @@
 package com.pythonteam;
 
-import com.pythonteam.arbol.*;
+import com.pythonteam.arbol.Centroide;
+import com.pythonteam.arbol.Elemento;
+import com.pythonteam.arbol.Funcion;
+import com.pythonteam.arbol.InferenciaDifusa;
+import com.pythonteam.arbol.Regla;
+import com.pythonteam.arbol.Resultado;
+import com.pythonteam.arbol.Variable;
 import com.pythonteam.archivos.ArchivoReglas;
 import com.pythonteam.archivos.ArchivoMaestro;
 import com.pythonteam.common.Constantes;
@@ -27,14 +33,14 @@ public class API {
     public void addVar(JsonObject bodyAsJson) throws Exception {
         
         Variable var = new Variable();
-        int size = archivoMaestro.imprimirReglas().size();
+        int tam = archivoMaestro.tamanio();
         int id = 0;
-        if (size != 0)
-            id = archivoMaestro.imprimirReglas().get(size-1).getId()+1;
+        if (tam != 0)
+            id = archivoMaestro.obtenerRegla(tam-1).getId()+1;
         var.setId(id);
         String nombre = bodyAsJson.getString("nombre");
         if (nombre.isEmpty())
-            throw new Exception();
+            throw new Exception("hace falta campo nombre");
         var.setNombre(nombre);
         var.setAlias(bodyAsJson.getString("alias"));
         if (bodyAsJson.containsKey("salida"))
@@ -91,8 +97,8 @@ public class API {
                         maximo = c.getValorDifuso();
                 }
             }
-            System.out.println("El valor maximo en salida  " + salida.getNombre() + " en funcion:  "
-                    + salida.getFunciones().get(i).getNombre() + " es de " + maximo);
+            //System.out.println("El valor maximo en salida  " + salida.getNombre() + " en funcion:  "
+            //        + salida.getFunciones().get(i).getNombre() + " es de " + maximo);
 
             valores[i] = maximo;
         }

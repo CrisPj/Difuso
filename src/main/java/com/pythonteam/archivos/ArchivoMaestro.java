@@ -37,20 +37,21 @@ public class ArchivoMaestro {
 
                     Variable variable = new Variable();
                     byte[] registroActual = new byte[Constantes.TAM_REGISTRO];
-                    variable.setId(archivo.readByte());
+                    variable.setId(archivo.readInt());
                     archivo.read(registroActual);
-                    variable.setNombre(new String(registroActual).trim());
+                    variable.setNombre(new String(registroActual,"UTF-8").trim());
+                    registroActual = new byte[3];
                     archivo.read(registroActual);
-                    variable.setAlias(new String(registroActual).trim());
+                    variable.setAlias(new String(registroActual,"UTF-8").trim());
                     variable.setSalida(archivo.readBoolean());
 
                     int tam = archivo.readInt();
                     ArrayList<Funcion> func = new ArrayList<>();
                     for (int i = 0; i < tam; i++) {
                         Funcion f = new Funcion();
-                        byte[] nombre = new byte[Constantes.TAM_REGISTRO];
-                        archivo.read(nombre);
-                        f.setNombre(new String(nombre).trim());
+                        registroActual = new byte[Constantes.TAM_REGISTRO];
+                        archivo.read(registroActual);
+                        f.setNombre(new String(registroActual,"UTF-8").trim());
                         f.setTraslape(archivo.readInt());
                         int size = archivo.readInt();
 
@@ -77,13 +78,13 @@ public class ArchivoMaestro {
     private void escribir(Variable var) throws IOException {
         StringBuffer buffer;
         archivo.seek(archivo.length());
-        archivo.writeByte(var.getId());
+        archivo.writeInt(var.getId());
         buffer = new StringBuffer(var.getNombre());
         buffer.setLength(Constantes.TAM_REGISTRO);
-        archivo.writeChars(buffer.toString());
+        archivo.write(buffer.toString().getBytes("UTF-8"));
         buffer = new StringBuffer(var.getAlias());
-        buffer.setLength(Constantes.TAM_REGISTRO);
-        archivo.writeChars(buffer.toString());
+        buffer.setLength(3);
+        archivo.write(buffer.toString().getBytes("UTF-8"));
         archivo.writeBoolean(var.isSalida());
         int tam = var.getFunciones().size();
         archivo.writeInt(tam);
@@ -93,7 +94,7 @@ public class ArchivoMaestro {
             {
                 buffer = new StringBuffer(f.getNombre());
                 buffer.setLength(Constantes.TAM_REGISTRO);
-                archivo.writeChars(buffer.toString());
+                archivo.write(buffer.toString().getBytes("UTF-8"));
 
                 archivo.writeInt(f.getTraslape());
                 archivo.writeInt(f.getPuntoCritico().length);
@@ -110,6 +111,10 @@ public class ArchivoMaestro {
 
     public ArrayList<Variable> imprimirReglas() {
         return variables;
+    }
+
+    public int tamanio(){
+        return variables.size();
     }
 
     public boolean eliminarRegla(int id) {

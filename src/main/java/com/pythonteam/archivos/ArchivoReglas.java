@@ -21,7 +21,7 @@ public class ArchivoReglas
         try {
             file = new RandomAccessFile(nombre + Constantes.EXTENCION_REGLAS, permisos);
             if (file.length() > 0)
-                readFile();
+              readFile();
         } catch (Exception ex) {
             System.out.println("Archivo no pudo ser creado");
         }
@@ -38,26 +38,25 @@ public class ArchivoReglas
                 Regla r = new Regla();
                 r.setId(file.readInt());
                 ArrayList<Elemento> elementos = new ArrayList<>();
-                byte[] registroActual = new byte[Constantes.TAM_REGISTRO];
+                //byte[] registroActual = new byte[Constantes.TAM_REGISTRO];
                 int z = file.readInt();
                 for (int i = 0; i < z; i++) {
-
                     Elemento e = new Elemento();
                     e.setIdAlias(file.readInt());
-                    file.read(registroActual);
-                    e.setAlias(new String(registroActual).trim());
+                    //file.read(registroActual);
                     e.setIdFuncion(file.readInt());
-                    file.read(registroActual);
-                    e.setFuncion(new String(registroActual).trim());
+                    //e.setAlias(new String(registroActual).trim());
+                    //file.read(registroActual);
+                    //e.setFuncion(new String(registroActual).trim());
                     e.setValorDifuso(file.readDouble());
                     elementos.add(e);
                 }
                 r.setAntecedentes(elementos);
                 Elemento e = new Elemento();
-                file.read(registroActual);
-                e.setAlias(new String(registroActual).trim());
-                file.read(registroActual);
-                e.setFuncion(new String(registroActual).trim());
+                //file.read(registroActual);
+                //e.setAlias(new String(registroActual).trim());
+                //file.read(registroActual);
+                //e.setFuncion(new String(registroActual).trim());
                 e.setValorDifuso(file.readDouble());
                 r.setConsecuente(e);
                 reglas.add(r);
@@ -78,19 +77,19 @@ public class ArchivoReglas
     }
 
     void escribir(Regla r) throws IOException {
-        StringBuffer buffer;
+        //StringBuffer buffer;
         file.writeInt(r.getId());
             file.writeInt(r.getAntecedentes().size());
             for (Elemento e:r.getAntecedentes()) {
                 file.writeInt(e.getIdAlias());
-                buffer = new StringBuffer(e.getAlias());
-                buffer.setLength(Constantes.TAM_REGISTRO);
-                file.writeChars(buffer.toString());
+                //buffer = new StringBuffer(e.getAlias());
+                //buffer.setLength(Constantes.TAM_REGISTRO);
+                //file.writeChars(buffer.toString());
 
                 file.writeInt(e.getIdFuncion());
-                buffer = new StringBuffer(e.getFuncion());
-                buffer.setLength(Constantes.TAM_REGISTRO);
-                file.writeChars(buffer.toString());
+                //buffer = new StringBuffer(e.getFuncion());
+                //buffer.setLength(Constantes.TAM_REGISTRO);
+                //file.writeChars(buffer.toString());
                 if (e.getValorDifuso()==null)
                     e.setValorDifuso(0.0);
                 file.writeDouble(e.getValorDifuso());
@@ -102,15 +101,15 @@ public class ArchivoReglas
                 e.setAlias("");
 
             file.writeInt(e.getIdAlias());
-            buffer = new StringBuffer(e.getAlias());
-            buffer.setLength(Constantes.TAM_REGISTRO);
-            file.writeChars(buffer.toString());
+            //buffer = new StringBuffer(e.getAlias());
+            //buffer.setLength(Constantes.TAM_REGISTRO);
+            //file.writeChars(buffer.toString());
             if (e.getFuncion()== null)
                 e.setFuncion("");
             file.writeInt(e.getIdFuncion());
-            buffer = new StringBuffer(e.getFuncion());
-            buffer.setLength(Constantes.TAM_REGISTRO);
-            file.writeChars(buffer.toString());
+            //buffer = new StringBuffer(e.getFuncion());
+            //buffer.setLength(Constantes.TAM_REGISTRO);
+            //file.writeChars(buffer.toString());
             if (e.getValorDifuso() == null)
                 e.setValorDifuso(0.0);
             file.writeDouble(e.getValorDifuso());

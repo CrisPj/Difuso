@@ -47,7 +47,6 @@ public class Main {
                 .putHeader("content-type", "application/json; charset=utf-8")
                 .end(Json.encode(api.getAllRules())));
 
-
         vertx.createHttpServer()
                 .requestHandler(router::accept)
                 .listen(8080);
@@ -76,7 +75,7 @@ public class Main {
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
-                    .setStatusCode(404).end("{\"error\":\"No se pudo realizar la inferencia\"}");
+                    .setStatusCode(404).end("{\"error\":\""+e.getMessage()+"\"}");
         }
     }
 
