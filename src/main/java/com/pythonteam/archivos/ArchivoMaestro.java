@@ -1,23 +1,17 @@
 package com.pythonteam.archivos;
 
-import com.pythonteam.arbol.Arbol;
 import com.pythonteam.arbol.Funcion;
-import com.pythonteam.arbol.Indice;
 import com.pythonteam.arbol.Variable;
 import com.pythonteam.common.Constantes;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ArchivoMaestro {
 
     private RandomAccessFile archivo;
-    private ArchivoIndice index;
-    private Arbol Arbol;
     private ArrayList<Variable> variables;
-
 
     public ArchivoMaestro(String nombre, String permisos) {
         variables = new ArrayList<>();
@@ -28,7 +22,6 @@ public class ArchivoMaestro {
     public void crearArchivo(String nombre, String permisos) {
         try {
             archivo = new RandomAccessFile(nombre + Constantes.EXTENCION_CONOCIMIENTO, permisos);
-            index = new ArchivoIndice(nombre + Constantes.EXTENCION_INDICE, permisos);
             if (archivo.length() > 0) {
                 readFile();
             }
@@ -43,15 +36,11 @@ public class ArchivoMaestro {
             for (int x = 0; x < archivo.length(); x++) {
 
                     Variable variable = new Variable();
-                    char[] registroActual = new char[Constantes.TAM_REGISTRO];
+                    byte[] registroActual = new byte[Constantes.TAM_REGISTRO];
                     variable.setId(archivo.readByte());
-                    for (int i = 0; i < Constantes.TAM_REGISTRO; i++) {
-                        registroActual[i] = archivo.readChar();
-                    }
+                    archivo.read(registroActual);
                     variable.setNombre(new String(registroActual).trim());
-                    for (int i = 0; i < Constantes.TAM_REGISTRO; i++) {
-                        registroActual[i] = archivo.readChar();
-                    }
+                    archivo.read(registroActual);
                     variable.setAlias(new String(registroActual).trim());
                     variable.setSalida(archivo.readBoolean());
 
@@ -59,10 +48,8 @@ public class ArchivoMaestro {
                     ArrayList<Funcion> func = new ArrayList<>();
                     for (int i = 0; i < tam; i++) {
                         Funcion f = new Funcion();
-                        char[] nombre = new char[Constantes.TAM_REGISTRO];
-                        for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
-                            nombre[j] = archivo.readChar();
-                        }
+                        byte[] nombre = new byte[Constantes.TAM_REGISTRO];
+                        archivo.read(nombre);
                         f.setNombre(new String(nombre).trim());
                         f.setTraslape(archivo.readInt());
                         int size = archivo.readInt();
@@ -73,10 +60,8 @@ public class ArchivoMaestro {
                         }
                         f.setPuntoCritico(puntos);
                         func.add(f);
-
                     }
                     variable.setFunciones(func);
-
                     variables.add(variable);
                 }
         } catch (Exception ex) {
@@ -84,20 +69,14 @@ public class ArchivoMaestro {
         }
     }
 
-    public void nuevoRegistro(Variable var) {
+    public void nuevoRegistro(Variable var) throws IOException {
         variables.add(var);
-
-        try {
-            escribir(var);
-        } catch (Exception ex) {
-            System.out.println("Fallo al escribir en archivo maestro");
-        }
+        escribir(var);
     }
 
     private void escribir(Variable var) throws IOException {
         StringBuffer buffer;
         archivo.seek(archivo.length());
-        index.nuevo(var.getId(), archivo.getFilePointer());
         archivo.writeByte(var.getId());
         buffer = new StringBuffer(var.getNombre());
         buffer.setLength(Constantes.TAM_REGISTRO);
@@ -133,23 +112,13 @@ public class ArchivoMaestro {
         return variables;
     }
 
-    public List<Indice> mostrarIndex() {
-        return index.mostrarIndice();
-    }
-
-    public void generarArbol() {
-        Arbol = new Arbol();
-        Arbol.generarArbol();
-    }
-
     public boolean eliminarRegla(int id) {
-        variables.removeIf(r-> r.getId() == id);
+        variables.removeIf(r -> r.getId() == id);
         writeFile();
         return false;
     }
 
-    public boolean editarRegla(Variable var)
-    {
+    public boolean editarRegla(Variable var) {
         Variable vr = obtenerRegla(var.getId());
         vr.setId(var.getId());
         vr.setNombre(var.getNombre());
@@ -165,7 +134,7 @@ public class ArchivoMaestro {
         try {
             archivo.seek(0);
             for (Variable v : variables) {
-               escribir(v);
+                escribir(v);
             }
         } catch (Exception ex) {
             System.out.println("Fallo al escribir en archivo maestro");
@@ -173,8 +142,7 @@ public class ArchivoMaestro {
     }
 
 
-    public boolean eliminarTodo()
-    {
+    public boolean eliminarTodo() {
         eliminarReglas();
         variables.clear();
         return true;
@@ -183,7 +151,6 @@ public class ArchivoMaestro {
     public void eliminarReglas() {
         try {
             archivo.setLength(0);
-            index.limpiarArchivo();
         } catch (Exception ex) {
             System.out.println("Archivo no pudo ser eliminado");
         }

@@ -38,34 +38,25 @@ public class ArchivoReglas
                 Regla r = new Regla();
                 r.setId(file.readInt());
                 ArrayList<Elemento> elementos = new ArrayList<>();
-                char[] registroActual = new char[Constantes.TAM_REGISTRO];
+                byte[] registroActual = new byte[Constantes.TAM_REGISTRO];
                 int z = file.readInt();
                 for (int i = 0; i < z; i++) {
 
                     Elemento e = new Elemento();
                     e.setIdAlias(file.readInt());
-                    for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
-                        registroActual[j] = file.readChar();
-                    }
+                    file.read(registroActual);
                     e.setAlias(new String(registroActual).trim());
                     e.setIdFuncion(file.readInt());
-                    for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
-                        registroActual[j] = file.readChar();
-                    }
+                    file.read(registroActual);
                     e.setFuncion(new String(registroActual).trim());
                     e.setValorDifuso(file.readDouble());
                     elementos.add(e);
                 }
                 r.setAntecedentes(elementos);
-                registroActual = new char[Constantes.TAM_REGISTRO];
                 Elemento e = new Elemento();
-                for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
-                    registroActual[j] = file.readChar();
-                }
+                file.read(registroActual);
                 e.setAlias(new String(registroActual).trim());
-                for (int j = 0; j < Constantes.TAM_REGISTRO; j++) {
-                    registroActual[j] = file.readChar();
-                }
+                file.read(registroActual);
                 e.setFuncion(new String(registroActual).trim());
                 e.setValorDifuso(file.readDouble());
                 r.setConsecuente(e);

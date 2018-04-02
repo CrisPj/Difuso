@@ -16,7 +16,6 @@ public class API {
 
     public API() {
         archivoMaestro = new ArchivoMaestro(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
-        archivoMaestro.generarArbol();
         archivoReglas = new ArchivoReglas(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
         try {
             genRules();

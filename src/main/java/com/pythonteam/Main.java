@@ -8,7 +8,7 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 
 public class Main {
-    static API api;
+    private static API api;
     public static void main(String[] args) {
 
         api = new API();
@@ -27,7 +27,7 @@ public class Main {
 
         router.route("/").handler(routingContext -> routingContext.response()
                 .putHeader("content-type", "application/json; charset=utf-8")
-                .end(Json.encodePrettily("Version:EAP"))
+                .end(Json.encode("Version:EAP"))
         );
 
         router.route("/addVar").handler(Main::addVar);
@@ -58,11 +58,11 @@ public class Main {
             int id = Integer.parseInt(routingContext.request().getParam("id"));
             routingContext.response()
                     .setStatusCode(201)
-                    .end(Json.encodePrettily(api.getRule(id)));
+                    .end(Json.encode(api.getRule(id)));
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
-                    .setStatusCode(404).end("{\"error\":\"No se pudo actualizar\"}");
+                    .setStatusCode(404).end("{\"error\":\""+e.getMessage()+"\"}");
         }
     }
 
@@ -72,7 +72,7 @@ public class Main {
 
             routingContext.response()
                     .setStatusCode(201)
-                    .end(Json.encodePrettily(api.inferencia(routingContext.getBodyAsJson())));
+                    .end(Json.encode(api.inferencia(routingContext.getBodyAsJson())));
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
@@ -85,11 +85,11 @@ public class Main {
             int id = Integer.parseInt(routingContext.request().getParam("id"));
             routingContext.response()
                     .setStatusCode(201)
-                    .end(Json.encodePrettily(api.getVar(id)));
+                    .end(Json.encode(api.getVar(id)));
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
-                    .setStatusCode(404).end("{\"error\":\"No se pudo actualizar\"}");
+                    .setStatusCode(404).end("{\"error\":\""+e.getMessage()+"\"}");
         }
     }
 
@@ -98,7 +98,7 @@ public class Main {
             api.updateVar(routingContext.getBodyAsJson());
             routingContext.response()
                     .setStatusCode(201)
-                    .end(Json.encodePrettily(api.getAllVars()));
+                    .end(Json.encode(api.getAllVars()));
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
@@ -111,11 +111,11 @@ public class Main {
             api.rmVar(routingContext.getBodyAsJson());
             routingContext.response()
                     .setStatusCode(201)
-                    .end(Json.encodePrettily(api.getAllVars()));
+                    .end(Json.encode(api.getAllVars()));
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
-                    .setStatusCode(404).end("{\"error\":\"No se ha podido eliminar\"}");
+                    .setStatusCode(404).end("{\"error\":\""+e.getMessage()+"\"}");
         }
     }
 
@@ -124,12 +124,11 @@ public class Main {
             api.addVar(routingContext.getBodyAsJson());
             routingContext.response()
                     .setStatusCode(201)
-                    .end(Json.encodePrettily(api.getAllVars()));
+                    .end(Json.encode(api.getAllVars()));
         } catch (Exception e) {
             routingContext.response()
                     .putHeader("content-type", "application/json; charset=utf-8")
                     .setStatusCode(404).end("{\"error\":\""+e.getMessage()+"\"}");
         }
-
     }
 }
