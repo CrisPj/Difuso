@@ -15,7 +15,7 @@ public class Funcion {
         a = puntos.get(0);
         for (int i = 1; i < puntos.size(); i++) {
             b = puntos.get(i);
-            if (a.getX() == 0 && b.getX() == 0)
+            if (a.getX() == 0 && b.getX() == 0 && x == 0)
             {
                 return b.getY();
             }
