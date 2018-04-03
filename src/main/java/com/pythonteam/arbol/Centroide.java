@@ -14,6 +14,8 @@ public class Centroide
 
 
     public Resultado genArea() {
+        double sum1 = 0;
+        double sum2 = 0;
         ArrayList<Punto> puntitos = new ArrayList<>();
         ArrayList<Funcion> funciones = variable.getFunciones();
         for (int i = 0; i < funciones.size(); i++) {
@@ -55,8 +57,8 @@ public class Centroide
         }
 
 
-        double sum1 = 0;
-        double sum2 = 0;
+
+
         for (int j = 0; j <puntitos.size()-1; j++) {
             for (double k = puntitos.get(j).getX(); k < puntitos.get(j+1).getX(); k++) {
                 if (puntitos.get(j).getY() != puntitos.get(j+1).getY())

@@ -81,7 +81,14 @@ public class ArchivoMaestro {
         archivo.writeInt(var.getId());
         buffer = new StringBuffer(var.getNombre());
         buffer.setLength(Constantes.TAM_REGISTRO);
-        archivo.write(buffer.toString().getBytes("UTF-8"));
+        byte[] c = buffer.toString().getBytes("UTF-8");
+        if (c.length > 30)
+        {
+            byte[] h = new byte[Constantes.TAM_REGISTRO];
+            System.arraycopy(c,0,h,0, Constantes.TAM_REGISTRO);
+            c = h;
+        }
+        archivo.write(c);
         buffer = new StringBuffer(var.getAlias());
         buffer.setLength(3);
         archivo.write(buffer.toString().getBytes("UTF-8"));
@@ -94,8 +101,14 @@ public class ArchivoMaestro {
             {
                 buffer = new StringBuffer(f.getNombre());
                 buffer.setLength(Constantes.TAM_REGISTRO);
-                archivo.write(buffer.toString().getBytes("UTF-8"));
-
+                c = buffer.toString().getBytes("UTF-8");
+                if (c.length > 30)
+                {
+                    byte[] h = new byte[Constantes.TAM_REGISTRO];
+                    System.arraycopy(c,0,h,0, Constantes.TAM_REGISTRO);
+                    c = h;
+                }
+                archivo.write(c);
                 archivo.writeInt(f.getTraslape());
                 archivo.writeInt(f.getPuntoCritico().length);
                 for (int i = 0; i < f.getPuntoCritico().length; i++) {
