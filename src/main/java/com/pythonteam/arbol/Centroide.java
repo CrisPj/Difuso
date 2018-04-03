@@ -33,50 +33,66 @@ public class Centroide
                             * (f.getPuntos().get(1).getX() - f.getPuntos().get(0).getX()) + f.getPuntos().get(0).getX();
 
                     puntitos.add(new Punto(chido, maximos[i]));
-                    if (maximos[i] != f.getPuntos().get(1).getY())
-                        puntitos.add(new Punto(f.getPuntos().get(1).getX() + (f.getPuntos().get(1).getX()-chido), maximos[i]));
-                    if (f.getPuntos().get(2).getY() != 0)
-                        puntitos.add(new Punto(f.getPuntos().get(2).getX(), f.getPuntos().get(2).getY()));
-                    else
-                        puntitos.add(new Punto(f.getPuntos().get(2).getX(), 0));
 
+
+                    for (double j = f.getPuntos().get(0).getX(); j < chido; j++) {
+                        sum1 += f.calcMembresia(j);
+                        sum2  = sum2 + (f.calcMembresia(j) * j);
+                    }
+                    double x =0;
+                    if (maximos[i] != f.getPuntos().get(1).getY()){
+                        x = f.getPuntos().get(1).getX() + (f.getPuntos().get(1).getX()-chido);
+                        puntitos.add(new Punto(x, maximos[i]));
+                        for (double j = chido; j < x; j++) {
+                            sum1 += f.calcMembresia(j);
+                            sum2  = sum2 + (f.calcMembresia(j) * j);
+                        }
+                        chido = x;
+                    }
+                    if (f.getPuntos().get(2).getY() != 0) {
+                        x = f.getPuntos().get(2).getX();
+                        puntitos.add(new Punto(x, f.getPuntos().get(2).getY()));
+                    }
+                    else
+                    {
+                        x = f.getPuntos().get(2).getX();
+                        puntitos.add(new Punto(x, 0));
+                    }
+
+                    for (double j = chido; j < x; j++) {
+                        sum1 += f.calcMembresia(j);
+                        sum2  = sum2 + (f.calcMembresia(j) * j);
+                    }
 
                 }
                 else if (f.getPuntos().size() == 4) {
                     puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
                     puntitos.add(new Punto(f.getPuntos().get(1).getX(), maximos[i]));
+                    for (double j = f.getPuntos().get(0).getX(); j < f.getPuntos().get(1).getX(); j++) {
+                        sum1 += f.calcMembresia(j);
+                        sum2  = sum2 + (f.calcMembresia(j) * j);
+                    }
                     puntitos.add(new Punto(f.getPuntos().get(2).getX(), maximos[i]));
+                    for (double j = f.getPuntos().get(1).getX(); j < f.getPuntos().get(2).getX(); j++) {
+                        sum1 += f.calcMembresia(j);
+                        sum2  = sum2 + (f.calcMembresia(j) * j);
+                    }
+                    double x = 0;
                     if ( f.getPuntos().get(3).getY()  > maximos[i])
                         puntitos.add(new Punto(f.getPuntos().get(3).getX(), maximos[i]));
                     else if (f.getPuntos().get(3).getY() != 0)
                         puntitos.add(new Punto(f.getPuntos().get(3).getX(), f.getPuntos().get(3).getY() ));
                     else
                         puntitos.add(new Punto(f.getPuntos().get(3).getX(), 0));
+
+                    for (double j = f.getPuntos().get(2).getX(); j < f.getPuntos().get(3).getX(); j++) {
+                        sum1 += f.calcMembresia(j);
+                        sum2  = sum2 + (f.calcMembresia(j) * j);
+                    }
                 }
             }
         }
 
-
-
-
-        for (int j = 0; j <puntitos.size()-1; j++) {
-            for (double k = puntitos.get(j).getX(); k < puntitos.get(j+1).getX(); k++) {
-                if (puntitos.get(j).getY() != puntitos.get(j+1).getY())
-                {
-                    double difX = puntitos.get(j+1).getX() - puntitos.get(j).getX();
-                    double dify = Math.abs(puntitos.get(j+1).getY() - puntitos.get(j).getY());
-                    double calc = dify / difX;
-                    sum1 += calc;
-                    sum2  = sum2 + (calc * k);
-                }
-                else
-                {
-                    sum1 += puntitos.get(j).getY();
-                    sum2  = sum2 + (puntitos.get(j).getY() * k);
-                }
-
-            }
-        }
         if (sum1 == 0)
             sum1=1;
         sum1 = Math.ceil(sum1);
