@@ -191,7 +191,7 @@ public class API {
                     Elemento ele = (Elemento) elchido.get(j).get(contadores3[j]-1);
                     auxElementos.add(ele);
                     double h = variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().get(variables.get(ele.getIdAlias()).getFunciones().get(ele.getIdFuncion()).getPuntos().size()-1).getX();
-                    h = h - (salida.getFunciones().size() * (salida.getFunciones().size()*3));
+                    h = h - (salida.getFunciones().size() * (salida.getFunciones().size()));
                         maxs2 += h;
                 }
 
