@@ -23,11 +23,6 @@ public class API {
     public API() {
         archivoMaestro = new ArchivoMaestro(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
         archivoReglas = new ArchivoReglas(Constantes.NOMBRE_ARCHIVOS, Constantes.LECTURA_ESCRITURA);
-        try {
-            genRules();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void addVar(JsonObject bodyAsJson) throws Exception {
@@ -52,7 +47,6 @@ public class API {
         }
         var.setFunciones(funciones);
         archivoMaestro.nuevoRegistro(var);
-        genRules();
     }
 
     public Resultado inferencia(JsonObject body) throws Exception {
@@ -118,12 +112,10 @@ public class API {
 
     public void rmVar(JsonObject bodyAsJson) throws Exception {
         archivoMaestro.eliminarRegla(bodyAsJson.getInteger("id"));
-        genRules();
     }
 
     public void updateVar(JsonObject bodyAsJson) throws Exception {
         archivoMaestro.editarRegla(bodyAsJson.mapTo(Variable.class));
-        genRules();
     }
 
     public Variable getVar(int id) {
@@ -235,7 +227,8 @@ public class API {
         }
     }
 
-    public ArrayList<Regla> getAllRules() {
+    public ArrayList<Regla> getAllRules() throws Exception {
+        genRules();
         return archivoReglas.obtenerReglas();
     }
 }

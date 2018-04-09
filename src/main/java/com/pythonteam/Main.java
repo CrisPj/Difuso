@@ -43,9 +43,17 @@ public class Main {
                 .putHeader("content-type", "application/json; charset=utf-8")
                 .end(Json.encode(api.getAllVars())));
 
-        router.route("/getRules").handler(routingContext -> routingContext.response()
-                .putHeader("content-type", "application/json; charset=utf-8")
-                .end(Json.encode(api.getAllRules())));
+        router.route("/getRules").handler(routingContext -> {
+            try {
+                routingContext.response()
+                        .putHeader("content-type", "application/json; charset=utf-8")
+                        .end(Json.encode(api.getAllRules()));
+            } catch (Exception e) {
+                routingContext.response()
+                        .putHeader("content-type", "application/json; charset=utf-8")
+                        .setStatusCode(404).end("{\"error\":\""+e.getMessage()+"\"}");
+            }
+        });
 
         vertx.createHttpServer()
                 .requestHandler(router::accept)
