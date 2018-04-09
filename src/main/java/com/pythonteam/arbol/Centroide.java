@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Centroide
 {
-    public static final double rectangulito = 0.0001;
+    public final double rectangulito = 0.001;
     private Variable variable;
     private double[] maximos;
 
