@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Centroide
 {
+    public static final double rectangulito = 0.0001;
     private Variable variable;
     private double[] maximos;
 
@@ -35,7 +36,7 @@ public class Centroide
                     puntitos.add(new Punto(chido, maximos[i]));
 
 
-                    for (double j = f.getPuntos().get(0).getX(); j < chido; j++) {
+                    for (double j = f.getPuntos().get(0).getX(); j < chido; j+= rectangulito) {
                         sum1 += f.calcMembresia(j);
                         sum2  = sum2 + (f.calcMembresia(j) * j);
                     }
@@ -43,7 +44,7 @@ public class Centroide
                     if (maximos[i] != f.getPuntos().get(1).getY()){
                         x = f.getPuntos().get(1).getX() + (f.getPuntos().get(1).getX()-chido);
                         puntitos.add(new Punto(x, maximos[i]));
-                        for (double j = chido; j < x; j++) {
+                        for (double j = chido; j < x; j+= rectangulito) {
                             sum1 += f.calcMembresia(j);
                             sum2  = sum2 + (f.calcMembresia(j) * j);
                         }
@@ -59,7 +60,7 @@ public class Centroide
                         puntitos.add(new Punto(x, 0));
                     }
 
-                    for (double j = chido; j < x; j++) {
+                    for (double j = chido; j < x; j+= rectangulito) {
                         sum1 += f.calcMembresia(j);
                         sum2  = sum2 + (f.calcMembresia(j) * j);
                     }
@@ -68,12 +69,12 @@ public class Centroide
                 else if (f.getPuntos().size() == 4) {
                     puntitos.add(new Punto(f.getPuntos().get(0).getX(), f.getPuntos().get(0).getY()));
                     puntitos.add(new Punto(f.getPuntos().get(1).getX(), maximos[i]));
-                    for (double j = f.getPuntos().get(0).getX(); j < f.getPuntos().get(1).getX(); j++) {
+                    for (double j = f.getPuntos().get(0).getX(); j < f.getPuntos().get(1).getX(); j+= rectangulito) {
                         sum1 += f.calcMembresia(j);
                         sum2  = sum2 + (f.calcMembresia(j) * j);
                     }
                     puntitos.add(new Punto(f.getPuntos().get(2).getX(), maximos[i]));
-                    for (double j = f.getPuntos().get(1).getX(); j < f.getPuntos().get(2).getX(); j++) {
+                    for (double j = f.getPuntos().get(1).getX(); j < f.getPuntos().get(2).getX(); j+= rectangulito) {
                         sum1 += f.calcMembresia(j);
                         sum2  = sum2 + (f.calcMembresia(j) * j);
                     }
@@ -85,7 +86,7 @@ public class Centroide
                     else
                         puntitos.add(new Punto(f.getPuntos().get(3).getX(), 0));
 
-                    for (double j = f.getPuntos().get(2).getX(); j < f.getPuntos().get(3).getX(); j++) {
+                    for (double j = f.getPuntos().get(2).getX(); j < f.getPuntos().get(3).getX(); j+= rectangulito) {
                         sum1 += f.calcMembresia(j);
                         sum2  = sum2 + (f.calcMembresia(j) * j);
                     }
