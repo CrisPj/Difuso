@@ -91,8 +91,8 @@ public class API {
                         maximo = c.getValorDifuso();
                 }
             }
-            //System.out.println("El valor maximo en salida  " + salida.getNombre() + " en funcion:  "
-            //        + salida.getFunciones().get(i).getNombre() + " es de " + maximo);
+            System.out.println("El valor maximo en salida  " + salida.getNombre() + " en funcion:  "
+                    + salida.getFunciones().get(i).getNombre() + " es de " + maximo);
 
             valores[i] = maximo;
         }
